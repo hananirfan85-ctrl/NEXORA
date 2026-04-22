@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These should be configured in the AI Studio Secrets or .env
-// We trim them to remove any accidental whitespace or hidden newline characters copied from the dashboard
-const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
-const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+// We strip out any invisible invalid characters (like non-ISO-8859-1 code points)
+// that sometimes get copied from the Supabase dashboard into Vercel.
+const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').replace(/[^\x20-\x7E]/g, '').trim();
+const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').replace(/[^\x20-\x7E]/g, '').trim();
 
 // Fallbacks to prevent instant crash on blank screen, 
 // so the Login/Signup pages can show the "Missing Config" error instead.
