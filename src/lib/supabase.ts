@@ -1,8 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-// These should be configured in the AI Studio Secrets or .env.example
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder_anon_key';
+// These should be configured in the AI Studio Secrets or .env
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
+// Fallbacks to prevent instant crash on blank screen, 
+// so the Login/Signup pages can show the "Missing Config" error instead.
+const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : 'https://placeholder.supabase.co';
+const supabaseAnonKey = rawKey ? rawKey : 'placeholder_anon_key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
