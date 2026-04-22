@@ -14,13 +14,18 @@ export default defineConfig(({mode}) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'pwa-192x192.svg', 'pwa-512x512.svg'],
         manifest: {
-          name: 'Nexus POS',
-          short_name: 'NexusPOS',
-          description: 'A complete POS and Shop Management System',
+          name: 'NEXORA',
+          short_name: 'NEXORA',
+          description: 'NEXORA - A complete POS and Shop Management System',
           theme_color: '#4f46e5',
           background_color: '#ffffff',
           display: 'standalone',
           icons: [
+            {
+              src: 'logo.png',
+              sizes: '512x512',
+              type: 'image/png'
+            },
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',

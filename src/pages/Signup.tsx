@@ -49,7 +49,9 @@ export default function Signup() {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
         <div>
           <div className="flex justify-center text-indigo-600">
-            <ShoppingCart size={48} />
+            <img src="/logo.png" alt="NEXORA Logo" className="h-16 w-auto object-contain" onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIxIi8+PGNpcmNsZSBjeD0iMTkiIGN5PSIyMSIgcj0iMSIvPjxwYXRoIGQ9Ik0yLjA1IDIuMDVoMmwzLjQzIDYuNThMMTAgMTRoOWwtLjI0LS43Ii8+PHBhdGggZD0iTTkgMTRoLjUiLz48cGF0aCBkPSJNOSAxNGwtLjI0LS43bC0zLjQzLTYuNTgiLz48L3N2Zz4='; // Fallback to cart SVG if logo.png not uploaded
+            }} />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create an account
