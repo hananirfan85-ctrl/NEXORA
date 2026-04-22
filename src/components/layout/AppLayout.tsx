@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -11,6 +11,7 @@ const navItems = [
   { name: 'Sales', path: '/sales', icon: DollarSign },
   { name: 'Reports', path: '/reports', icon: BarChart3 },
   { name: 'Records', path: '/records', icon: Clock },
+  { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
 export function AppLayout() {

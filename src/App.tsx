@@ -10,6 +10,7 @@ import POS from './pages/POS';
 import Sales from './pages/Sales';
 import Reports from './pages/Reports';
 import Records from './pages/Records';
+import Settings from './pages/Settings';
 
 // Protected Route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="sales" element={<Sales />} />
             <Route path="reports" element={<Reports />} />
             <Route path="records" element={<Records />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

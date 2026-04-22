@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These should be configured in the AI Studio Secrets or .env
-const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const rawKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// We trim them to remove any accidental whitespace or hidden newline characters copied from the dashboard
+const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
 // Fallbacks to prevent instant crash on blank screen, 
 // so the Login/Signup pages can show the "Missing Config" error instead.

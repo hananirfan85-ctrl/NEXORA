@@ -17,7 +17,7 @@ export default function POS() {
   
   const [processing, setProcessing] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
-  const [lastSaleId, setLastSaleId] = useState<string | null>(null);
+  const [completedSale, setCompletedSale] = useState<{ id: string, amount: number, items: CartItem[] } | null>(null);
 
   const [showClearCart, setShowClearCart] = useState(false);
 
@@ -101,12 +101,86 @@ export default function POS() {
       alert('Error processing sale. Is your Supabase RPC set up? Check the console.');
       // Fallback: manually insert if RPC is missing, but constraints require RPC for atomic operations
     } else {
-      setLastSaleId(saleId);
+      setCompletedSale({ id: saleId, amount: cartTotal, items: [...cart] });
       setShowReceipt(true);
       setCart([]);
       fetchProducts(); // Refresh stock
     }
     setProcessing(false);
+  };
+
+  const handlePrint = () => {
+    if (!completedSale) return;
+
+    const bName = localStorage.getItem('nexora_business_name') || 'NEXORA POS';
+    const address = localStorage.getItem('nexora_address') || 'Nexus Supermarket\n123 Street';
+    const footer = localStorage.getItem('nexora_footer') || 'Thank you for shopping with us!';
+
+    const printContent = `
+      <html>
+        <head>
+          <title>Receipt - ${completedSale.id}</title>
+          <style>
+            body { font-family: monospace; width: 300px; margin: 0 auto; color: #000; padding: 20px; }
+            .center { text-align: center; }
+            .bold { font-weight: bold; }
+            .line { border-bottom: 1px dashed #000; margin: 10px 0; }
+            .item-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            .amount { text-align: right; }
+            @media print {
+              body { width: 100%; margin: 0; padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="center">
+            <h2 style="margin: 0 0 5px 0;">${bName}</h2>
+            <p style="margin: 0; white-space: pre-wrap; font-size: 12px;">${address}</p>
+          </div>
+          
+          <div class="line"></div>
+          <div style="font-size: 12px; margin-bottom: 10px;">
+            Receipt: #${completedSale.id.split('-')[0].toUpperCase()}<br/>
+            Date: ${new Date().toLocaleString()}<br/>
+          </div>
+          <div class="line"></div>
+
+          ${completedSale.items.map(item => `
+            <div class="item-row">
+              <span style="flex: 1;">${item.cartQuantity}x ${item.name}</span>
+              <span class="amount">${formatCurrency(item.selling_price * item.cartQuantity)}</span>
+            </div>
+            <div style="font-size: 10px; color: #333; margin-bottom: 4px;">@ ${formatCurrency(item.selling_price)} / unit</div>
+          `).join('')}
+
+          <div class="line"></div>
+          <div class="item-row bold" style="font-size: 16px; margin-top: 5px;">
+            <span>TOTAL</span>
+            <span>${formatCurrency(completedSale.amount)}</span>
+          </div>
+          <div class="line"></div>
+
+          <div class="center" style="margin-top: 15px; font-size: 12px; white-space: pre-wrap;">
+            ${footer}
+          </div>
+        </body>
+      </html>
+    `;
+
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    iframe.contentWindow?.document.open();
+    iframe.contentWindow?.document.write(printContent);
+    iframe.contentWindow?.document.close();
+    
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 1000);
+    }, 500);
   };
 
   if (showReceipt) {
@@ -117,14 +191,14 @@ export default function POS() {
             <CheckCircle size={32} />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Sale Complete!</h2>
-          <p className="text-sm text-gray-500 mb-6">Receipt ID: {lastSaleId?.split('-')[0].toUpperCase()}</p>
+          <p className="text-sm text-gray-500 mb-6">Receipt ID: {completedSale?.id?.split('-')[0].toUpperCase()}</p>
           
           <div className="border-t border-b py-4 my-6 border-dashed space-y-2">
-            <div className="flex justify-between font-medium"><span>Amount Paid</span><span>{formatCurrency(cartTotal)}</span></div>
+            <div className="flex justify-between font-medium"><span>Amount Paid</span><span>{formatCurrency(completedSale?.amount || 0)}</span></div>
           </div>
 
           <div className="flex gap-4 justify-center">
-            <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors font-medium">
+            <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors font-medium">
               <Printer size={18} /> Print
             </button>
             <button onClick={() => setShowReceipt(false)} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium">
