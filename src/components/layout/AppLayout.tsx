@@ -22,6 +22,7 @@ export function AppLayout() {
   // PWA & Offline State
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
@@ -43,8 +44,15 @@ export function AppLayout() {
     };
   }, []);
 
-  const handleInstallClick = async () => {
+  const initiateInstall = () => {
     if (!deferredPrompt) return;
+    setShowTermsModal(true);
+  };
+
+  const confirmInstall = async () => {
+    setShowTermsModal(false);
+    if (!deferredPrompt) return;
+    
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
@@ -178,7 +186,7 @@ export function AppLayout() {
             
             {deferredPrompt && (
               <button 
-                onClick={handleInstallClick}
+                onClick={initiateInstall}
                 className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200"
               >
                 <Download size={16} />
@@ -216,6 +224,61 @@ export function AppLayout() {
           </motion.div>
         </div>
       </main>
+
+      {/* Terms and Agreements Modal for PWA Installation */}
+      <AnimatePresence>
+        {showTermsModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between shrink-0">
+                <h3 className="text-xl font-bold text-gray-900">Software Agreement</h3>
+                <button 
+                  onClick={() => setShowTermsModal(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6 overflow-y-auto text-sm text-gray-600 space-y-4">
+                <p>
+                  <strong>1. Acceptance of Terms:</strong> By downloading and installing NEXORA, you agree to be bound by these Terms of Service.
+                </p>
+                <p>
+                  <strong>2. Local Storage & Data:</strong> This application utilizes browser local storage and caching to function offline. 
+                  By installing, you consent to the storage of this application data on your local device.
+                </p>
+                <p>
+                  <strong>3. Analytics & Usage:</strong> NEXORA may collect diagnostic data to improve service reliability and performance metrics strictly directly proportional to your usage of the system.
+                </p>
+                <p>
+                  <strong>4. Liability Limitation:</strong> NEXORA provides this POS system "as-is". We are not liable for business interruptions, financial calculations manually altered, or loss of device caching.
+                </p>
+              </div>
+
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex gap-3 shrink-0">
+                <button
+                  onClick={() => setShowTermsModal(false)}
+                  className="flex-1 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={confirmInstall}
+                  className="flex-1 px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  I Accept & Install
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
