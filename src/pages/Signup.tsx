@@ -16,8 +16,14 @@ export default function Signup() {
     setError('');
 
     // Pre-flight check for missing Supabase credentials
-    if (!import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('YOUR_SUPABASE_URL')) {
-      setError('Missing Supabase Config: Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Secrets / Environment Variables.');
+    const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    if (!rawUrl || rawUrl.includes('YOUR_SUPABASE_URL')) {
+      setError('Missing Supabase Config: Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Vercel Environment Variables.');
+      setLoading(false);
+      return;
+    }
+    if (!rawUrl.startsWith('https://')) {
+      setError('Invalid Config: Your VITE_SUPABASE_URL must start exactly with "https://". Please update it in Vercel and redeploy.');
       setLoading(false);
       return;
     }
@@ -37,7 +43,13 @@ export default function Signup() {
         navigate('/');
       }
     } catch (err: any) {
-      setError(err?.message || 'A network error occurred. Check your Supabase configuration.');
+      if (err?.message === 'Failed to fetch') {
+        setError('Network Error (Failed to fetch). This usually means 1 of 3 things:\n1. Your Supabase project URL has a typo.\n2. Your Supabase project was PAUSED due to inactivity (log into Supabase to unpause it).\n3. Your Vercel environment variables are misconfigured. Double-check them and Redeploy.');
+      } else if (err?.message?.toLowerCase().includes('api key')) {
+        setError('Invalid API Key: The VITE_SUPABASE_ANON_KEY in Vercel is incorrect. Go to Supabase -> Project Settings -> API, copy the "anon public" key, update it in Vercel, and click Redeploy.');
+      } else {
+        setError(err?.message || 'A network error occurred. Check your Supabase configuration.');
+      }
     } finally {
       // Ensure loading state resets
       setLoading(false);
