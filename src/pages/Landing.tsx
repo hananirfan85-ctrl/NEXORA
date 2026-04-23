@@ -69,7 +69,9 @@ export default function Landing() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-20 items-center">
               <div className="flex items-center gap-3 text-white font-display font-bold text-2xl tracking-widest uppercase">
-                <img src="/logo.png" alt="NEXORA" className="h-9 w-auto object-contain drop-shadow-md" />
+                <img src="/logo.png" alt="NEXORA" className="h-9 w-auto object-contain drop-shadow-md" onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIxIi8+PGNpcmNsZSBjeD0iMTkiIGN5PSIyMSIgcj0iMSIvPjxwYXRoIGQ9Ik0yLjA1IDIuMDVoMmwzLjQzIDYuNThMMTAgMTRoOWwtLjI0LS43Ii8+PHBhdGggZD0iTTkgMTRoLjUiLz48cGF0aCBkPSJNOSAxNGwtLjI0LS43bC0zLjQzLTYuNTgiLz48L3N2Zz4=';
+                }} />
                 <span className="drop-shadow-md">NEXORA</span>
               </div>
               <div className="flex items-center gap-6">

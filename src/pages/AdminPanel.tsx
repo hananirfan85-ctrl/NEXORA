@@ -27,7 +27,11 @@ export default function AdminPanel() {
     const { data, error } = await supabase.rpc('get_all_users');
     
     if (error) {
-      if (error.message.includes('Could not find') || error.message.includes('does not exist')) {
+      if (
+        error.message.includes('Could not find') || 
+        error.message.includes('does not exist') ||
+        error.message.includes('Access Denied')
+      ) {
         setNeedsSetup(true);
       } else {
         setError(error.message);

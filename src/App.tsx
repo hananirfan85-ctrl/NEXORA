@@ -24,24 +24,6 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!user) return <Navigate to="/home" />;
-
-  // Enforce Super Admin only access to the software dashboard
-  if (user.email !== 'hananirfan85@gmail.com') {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center p-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Account Pending</h2>
-        <p className="text-gray-600 max-w-md mb-8">
-          You have successfully registered ({user.email}). However, access to the NEXORA dashboard requires administrator approval.
-        </p>
-        <button 
-          onClick={() => signOut()} 
-          className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
-        >
-          Sign Out
-        </button>
-      </div>
-    );
-  }
   
   return <>{children}</>;
 }

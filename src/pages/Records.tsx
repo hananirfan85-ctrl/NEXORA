@@ -45,10 +45,26 @@ export default function Records() {
     }
   };
 
+  const clearLogs = async () => {
+    if (!window.confirm("Are you sure you want to clear all activity records?")) return;
+    setLoading(true);
+    await supabase.from('activity_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000'); // Deletes all user's logs (RLS protects others)
+    fetchLogs();
+  };
+
   return (
     <div className="h-full flex flex-col space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Activity Records</h1>
+        {logs.length > 0 && (
+          <button 
+            onClick={clearLogs}
+            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-sm font-medium"
+          >
+            <Trash2 size={16} />
+            Clear History
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex-1 overflow-auto p-6">

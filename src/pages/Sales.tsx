@@ -3,7 +3,7 @@ import { supabase, Sale } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { formatCurrency } from '../lib/utils';
 import { format } from 'date-fns';
-import { FileText, ChevronRight } from 'lucide-react';
+import { FileText, ChevronRight, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Sales() {
@@ -44,6 +44,17 @@ export default function Sales() {
     }
   };
 
+  const deleteSale = async (e: React.MouseEvent, saleId: string) => {
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to permanently delete this sale record?")) return;
+    
+    // Deleting the sale will cascade delete sale_items automatically in Supabase due to ON DELETE CASCADE
+    await supabase.from('sales').delete().eq('id', saleId);
+    
+    if (selectedSaleId === saleId) setSelectedSaleId(null);
+    fetchSales();
+  };
+
   return (
     <div className="h-full flex flex-col space-y-6">
       <div className="flex items-center justify-between">
@@ -80,7 +91,15 @@ export default function Sales() {
                       <p className="font-bold text-gray-900">{formatCurrency(sale.total_amount)}</p>
                       <p className="text-sm font-medium text-emerald-600">Profit: {formatCurrency(sale.total_profit)}</p>
                     </div>
-                    <ChevronRight size={20} className={`text-gray-400 transition-transform ${selectedSaleId === sale.id ? 'rotate-90' : ''}`} />
+                    <div className="flex items-center gap-2">
+                       <button 
+                         onClick={(e) => deleteSale(e, sale.id)}
+                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                       >
+                         <Trash2 size={18} />
+                       </button>
+                       <ChevronRight size={20} className={`text-gray-400 transition-transform ${selectedSaleId === sale.id ? 'rotate-90' : ''}`} />
+                    </div>
                   </div>
                 </div>
 
