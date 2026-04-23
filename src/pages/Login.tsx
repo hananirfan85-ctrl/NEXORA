@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ShoppingCart } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,16 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // --- DEBUGGING HELP ---
+    if (email === 'debug@nexora.com') {
+       const url = import.meta.env.VITE_SUPABASE_URL || 'MISSING';
+       const key = import.meta.env.VITE_SUPABASE_ANON_KEY || 'MISSING';
+       setError(`DEBUG MODE:\nURL Length: ${url.length}\nURL Starts With: ${url.substring(0, 10)}...\nKey Length: ${key.length}\nKey Starts With: ${key.substring(0, 10)}...`);
+       setLoading(false);
+       return;
+    }
+    // -----------------------
 
     const rawUrl = import.meta.env.VITE_SUPABASE_URL || '';
     if (!rawUrl || rawUrl.includes('YOUR_SUPABASE_URL')) {
@@ -52,63 +63,104 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <div>
-          <div className="flex justify-center text-indigo-600">
-            <img src="/logo.png" alt="NEXORA Logo" className="h-16 w-auto object-contain" onError={(e) => {
-              (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIxIi8+PGNpcmNsZSBjeD0iMTkiIGN5PSIyMSIgcj0iMSIvPjxwYXRoIGQ9Ik0yLjA1IDIuMDVoMmwzLjQzIDYuNThMMTAgMTRoOWwtLjI0LS43Ii8+PHBhdGggZD0iTTkgMTRoLjUiLz48cGF0aCBkPSJNOSAxNGwtLjI0LS43bC0zLjQzLTYuNTgiLz48L3N2Zz4='; // Fallback to cart SVG if logo.png not uploaded
-            }} />
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to NEXORA
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-              create a new account
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          {error && (
-            <div className="bg-red-50 p-4 rounded-md">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          )}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-              <input
-                type="email"
-                required
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                required
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
+    <div className="relative min-h-screen font-sans selection:bg-indigo-500/30 selection:text-white overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      
+      {/* Refined, Elegant Tech Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#030305]">
+        {/* Layer 1: Elegant Dark 3D Abstract Image */}
+        <motion.img 
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+          alt="Immersive Studio Background" 
+          className="absolute inset-0 w-[110%] h-[110%] object-cover opacity-40 mix-blend-lighten -left-[5%] -top-[5%]"
+          animate={{ 
+            scale: [1, 1.08, 1],
+            x: ['-2%', '2%', '-2%'],
+            y: ['-2%', '2%', '-2%'],
+            rotate: [0, 1, 0]
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+        />
 
+        {/* Layer 2: Architectural / Digital Twin Blueprint Grid Overlay */}
+        <motion.div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+            backgroundSize: '80px 80px',
+            backgroundPosition: 'center center'
+          }}
+          animate={{ backgroundPosition: ['0px 0px', '80px 80px'] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
+
+        {/* Layer 4: Vignette for text readability across edges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/90"></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <Link to="/home" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium mb-8 transition-colors group">
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          Back to Home
+        </Link>
+        <div className="bg-black/40 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 translate-y-0" />
+          
           <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+            <div className="flex justify-center text-indigo-600 mb-6">
+              <img src="/logo.png" alt="NEXORA Logo" className="h-12 w-auto object-contain drop-shadow-md" />
+            </div>
+            <h2 className="text-center text-3xl font-display font-bold text-white tracking-tight">
+              Sign in to NEXORA
+            </h2>
+            <p className="mt-3 text-center text-sm font-sans font-light text-gray-400">
+              Or{' '}
+              <Link to="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
+                create a new account
+              </Link>
+            </p>
           </div>
-        </form>
+          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl">
+                <p className="text-sm font-sans font-light text-red-400">{error}</p>
+              </div>
+            )}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-sans font-medium text-gray-300 mb-2 tracking-wide">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm font-mono"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@nexora.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-sans font-medium text-gray-300 mb-2 tracking-wide">Password</label>
+                <input
+                  type="password"
+                  required
+                  className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm font-mono"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-sm font-mono tracking-widest font-bold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-black disabled:opacity-50 transition-all uppercase hover:scale-[1.02]"
+              >
+                {loading ? 'Authenticating...' : 'Secure Login'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

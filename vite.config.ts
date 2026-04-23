@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'pwa-192x192.svg', 'pwa-512x512.svg'],
+        includeAssets: ['favicon.ico', 'logo.png'],
         manifest: {
           name: 'NEXORA',
           short_name: 'NEXORA',
@@ -23,18 +23,13 @@ export default defineConfig(({mode}) => {
           icons: [
             {
               src: 'logo.png',
-              sizes: '512x512',
+              sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-192x192.svg',
-              sizes: '192x192',
-              type: 'image/svg+xml'
-            },
-            {
-              src: 'pwa-512x512.svg',
+              src: 'logo.png',
               sizes: '512x512',
-              type: 'image/svg+xml'
+              type: 'image/png'
             }
           ]
         },

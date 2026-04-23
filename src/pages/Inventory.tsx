@@ -100,11 +100,26 @@ export default function Inventory() {
     if (!deleteCandidate) return;
     const { id, name } = deleteCandidate;
     setFormLoad(true);
+
+    // Deep Eradication: Find all sales tied to this product
+    const { data: itemData } = await supabase.from('sale_items').select('sale_id').eq('product_id', id);
+    const saleIds = Array.from(new Set(itemData?.map(item => item.sale_id) || []));
+    
+    // Delete the sales (which cascades and deletes the sale_items automatically)
+    if (saleIds.length > 0) {
+      await supabase.from('sales').delete().in('id', saleIds);
+    }
+
+    // Eradicate all history records mentioning this product
+    await supabase.from('activity_logs').delete().like('description', `%${name}%`);
+
+    // Finally delete the product itself
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (!error) {
-      logActivity('DELETE_PRODUCT', `Deleted product: ${name}`);
+      logActivity('DELETE_PRODUCT', `Erased product and all associated sales/records: ${name}`);
       fetchProducts();
     }
+    
     setFormLoad(false);
     setDeleteCandidate(null);
   };

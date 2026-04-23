@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -90,23 +90,46 @@ export function AppLayout() {
         </div>
         
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 hide-scrollbar">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={closeMobileMenu}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-indigo-50 text-indigo-700 font-medium'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                }`
-              }
-            >
-              <item.icon size={20} />
-              {item.name}
-            </NavLink>
-          ))}
+          {navItems.map((item) => {
+            // Only admin can access POS/dashboard stuff if requested, 
+            // but for now let's just make sure Admin Panel is only for admin.
+            // "admin able to access the dashoboard and other features to use this and admin only access to this email hananirfan85@gmail.com"
+            const isAdminRoute = item.path === '/admin';
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-indigo-50 text-indigo-700 font-medium'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`
+                }
+              >
+                <item.icon size={20} />
+                {item.name}
+              </NavLink>
+            );
+          })}
+          
+          {user?.email === 'hananirfan85@gmail.com' && (
+             <NavLink
+             to="/admin"
+             onClick={closeMobileMenu}
+             className={({ isActive }) =>
+               `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors mt-4 border border-indigo-100 ${
+                 isActive
+                   ? 'bg-indigo-600 text-white font-medium shadow-md'
+                   : 'text-indigo-700 hover:bg-indigo-50 hover:text-indigo-800'
+               }`
+             }
+           >
+             <LayoutDashboard size={20} />
+             Admin Super Panel
+           </NavLink>
+          )}
         </nav>
 
         <div className="p-4 border-t border-gray-200 shrink-0">
@@ -163,6 +186,14 @@ export function AppLayout() {
                 <span className="sm:hidden">Install</span>
               </button>
             )}
+
+            <button 
+              onClick={() => navigate('/home')}
+              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-sm font-semibold transition-colors shadow-sm"
+            >
+              <Home size={16} />
+              <span className="hidden sm:inline">Back to Home</span>
+            </button>
 
             <div className="text-indigo-600 font-bold tracking-tight md:hidden flex items-center gap-2 ml-2">
               <img src="/logo.png" alt="NEXORA Logo" className="h-6 w-auto object-contain" onError={(e) => {
