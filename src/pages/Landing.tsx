@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart3, Package, ShoppingCart, Zap, ShieldCheck, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Download, X } from 'lucide-react';
 
 export default function Landing() {
-  const [showInstallModal, setShowInstallModal] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
@@ -23,8 +22,6 @@ export default function Landing() {
       if (outcome === 'accepted') {
         setDeferredPrompt(null);
       }
-    } else {
-      setShowInstallModal(true);
     }
   };
 
@@ -99,13 +96,15 @@ export default function Landing() {
                 <span className="drop-shadow-md">NEXORA</span>
               </div>
               <div className="flex items-center gap-6">
-                <button 
-                  onClick={handleDownloadClick}
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-sans font-medium text-white transition-all backdrop-blur-sm shadow-lg hover:shadow-white/10"
-                >
-                  <Download size={16} />
-                  Download App
-                </button>
+                {deferredPrompt && (
+                  <button 
+                    onClick={handleDownloadClick}
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 border border-indigo-500/50 rounded-lg text-sm font-sans font-medium text-white transition-all shadow-lg shadow-indigo-600/30"
+                  >
+                    <Download size={16} />
+                    Install App
+                  </button>
+                )}
                 <Link to="/about" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">About</Link>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
                 <Link to="/login" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
@@ -318,57 +317,6 @@ export default function Landing() {
           </div>
         </motion.footer>
       </div>
-
-      {/* Manual Install Modal */}
-      <AnimatePresence>
-        {showInstallModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-[#111111] border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
-            >
-              <div className="p-6 border-b border-white/10 flex items-center justify-between shrink-0">
-                <h3 className="text-xl font-bold text-white">Install NEXORA App</h3>
-                <button 
-                  onClick={() => setShowInstallModal(false)}
-                  className="p-2 text-gray-400 hover:text-white rounded-full transition-colors"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              
-              <div className="p-6 text-sm text-gray-400 space-y-4">
-                <p>NEXORA is a Progressive Web App (PWA). You can install it directly to your device for offline use without going through an app store.</p>
-                <div className="bg-white/5 p-4 rounded-lg">
-                  <strong className="text-white block mb-2">On iOS (Safari):</strong>
-                  <ol className="list-decimal pl-5 space-y-1">
-                    <li>Tap the <strong>Share</strong> button at the bottom of the screen.</li>
-                    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-                  </ol>
-                </div>
-                <div className="bg-white/5 p-4 rounded-lg">
-                  <strong className="text-white block mb-2">On Desktop (Chrome/Edge):</strong>
-                  <ol className="list-decimal pl-5 space-y-1">
-                    <li>Click the <strong>Install</strong> icon on the right side of the URL/address bar.</li>
-                    <li>Or click the 3-dots menu and select <strong>Install NEXORA</strong>.</li>
-                  </ol>
-                </div>
-              </div>
-
-              <div className="p-6 bg-black/40 border-t border-white/5 flex gap-3 shrink-0">
-                <button
-                  onClick={() => setShowInstallModal(false)}
-                  className="w-full px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
-                >
-                  Got it
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

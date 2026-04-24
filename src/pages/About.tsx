@@ -27,17 +27,18 @@ export default function About() {
           <div className="w-full h-px border-t border-white/10 mb-12" />
 
           <div className="mb-16">
-            <h2 className="text-3xl font-display font-bold mb-8">The Visionary Behind It</h2>
+            <h2 className="text-3xl font-display font-bold mb-8">The Visionaries Behind It</h2>
             
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Hanan Irfan */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
                 <div>
-                  <h3 className="text-4xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 mb-4">Hanan Irfan</h3>
-                  <p className="text-gray-300 font-light text-lg mb-8">
+                  <h3 className="text-3xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 mb-4">Hanan Irfan</h3>
+                  <p className="text-gray-300 font-light text-base mb-8">
                     Founder & Lead Architect at NEXORA. Passionate about bringing world-class, enterprise-grade tools to businesses of all sizes through elegant code and intuitive design.
                   </p>
                   
-                  <ul className="space-y-4">
+                  <ul className="space-y-4 mb-8">
                     <li className="flex items-center gap-4 text-gray-200">
                       <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
                         <User size={18} className="text-indigo-400" />
@@ -53,20 +54,47 @@ export default function About() {
                         <div className="text-xs text-gray-400 mt-1">4th Semester, BSCS</div>
                       </div>
                     </li>
+                  </ul>
+                </div>
+                <div className="flex justify-center mt-auto">
+                   <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-indigo-500/20 shadow-[0_0_30px_-10px_rgba(99,102,241,0.5)]">
+                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 flex items-center justify-center">
+                        <span className="text-4xl font-display font-bold text-white/50">HI</span>
+                     </div>
+                   </div>
+                </div>
+              </div>
+
+              {/* Ahmad Ali */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <h3 className="text-3xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-300 mb-4">Ahmad Ali</h3>
+                  <p className="text-gray-300 font-light text-base mb-8">
+                    Co-Founder & Core Developer. Specializing in robust system architecture and ensuring seamless functionality across our expansive feature sets.
+                  </p>
+                  
+                  <ul className="space-y-4 mb-8">
                     <li className="flex items-center gap-4 text-gray-200">
-                      <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
-                        <Code size={18} className="text-indigo-400" />
+                      <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                        <User size={18} className="text-blue-400" />
                       </div>
-                      <div className="font-mono text-sm uppercase tracking-widest">Full-Stack Innovator</div>
+                      <div className="font-mono text-sm uppercase tracking-widest">20 Years Old</div>
+                    </li>
+                    <li className="flex items-center gap-4 text-gray-200">
+                      <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                        <GraduationCap size={18} className="text-blue-400" />
+                      </div>
+                      <div>
+                        <div className="font-mono text-sm uppercase tracking-widest">KFUEIT University</div>
+                        <div className="text-xs text-gray-400 mt-1">4th Semester, BSCS</div>
+                      </div>
                     </li>
                   </ul>
                 </div>
-                
-                <div className="flex justify-center">
-                   <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-indigo-500/20 shadow-[0_0_60px_-15px_rgba(99,102,241,0.5)]">
-                     {/* Placeholder shape since no real headshot image given */}
-                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 flex items-center justify-center">
-                        <span className="text-8xl font-display font-bold text-white/50">HI</span>
+                <div className="flex justify-center mt-auto">
+                   <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-blue-500/20 shadow-[0_0_30px_-10px_rgba(59,130,246,0.5)]">
+                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-800 flex items-center justify-center">
+                        <span className="text-4xl font-display font-bold text-white/50">AA</span>
                      </div>
                    </div>
                 </div>
@@ -75,15 +103,26 @@ export default function About() {
           </div>
           
           <div>
-            <h2 className="text-3xl font-display font-bold mb-6">Core Philosophy</h2>
+            <h2 className="text-3xl font-display font-bold mb-6">Software Awareness & Philosophy</h2>
+            <p className="text-gray-400 font-light mb-8 max-w-3xl leading-relaxed">
+              Our main focus is to change how modern businesses operate by delivering advanced tools previously reserved for massive corporations, packaged into an intuitive interface that anybody can learn in minutes.
+            </p>
             <div className="grid md:grid-cols-2 gap-8 font-light text-gray-300">
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Design First</h4>
                 <p>Ugly software slows people down. NEXORA prioritizes a polished, high-contrast, dark-mode-first aesthetic that reduces eye strain and increases focus during high-volume retail hours.</p>
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                <h4 className="text-white font-bold mb-3 tracking-wide">Always Online</h4>
-                <p>NEXORA uses cutting-edge service workers and background sync. When your internet goes down, you keep selling. Once you're back online, everything syncs flawlessly.</p>
+                <h4 className="text-white font-bold mb-3 tracking-wide">Anywhere, Offline & Online</h4>
+                <p>NEXORA works seamlessly through cutting-edge PWA technology. Whether your internet goes down or you're on a blazing fast connection, you keep selling. Once you're back online, everything syncs flawlessly and securely.</p>
+              </div>
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h4 className="text-white font-bold mb-3 tracking-wide">Enterprise Feature Set</h4>
+                <p>Complete with an AI Chatbot, CRM Admin Panel, automated analytics, offline caching mechanisms, and secure Supabase backend to keep your inventory matrix perfectly balanced at all times.</p>
+              </div>
+              <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h4 className="text-white font-bold mb-3 tracking-wide">Install Anywhere</h4>
+                <p>No app store required. You can install NEXORA directly on iOS, Android, or Desktop directly from your browser, making rollouts across your retail business instantaneous.</p>
               </div>
             </div>
           </div>
