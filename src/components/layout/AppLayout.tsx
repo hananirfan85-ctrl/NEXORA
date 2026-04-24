@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home, Users } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -9,6 +9,7 @@ const navItems = [
   { name: 'Inventory', path: '/inventory', icon: Package },
   { name: 'POS Billing', path: '/pos', icon: ShoppingCart },
   { name: 'Sales', path: '/sales', icon: DollarSign },
+  { name: 'Customers', path: '/customers', icon: Users },
   { name: 'Reports', path: '/reports', icon: BarChart3 },
   { name: 'Records', path: '/records', icon: Clock },
   { name: 'Settings', path: '/settings', icon: Settings },
@@ -45,19 +46,21 @@ export function AppLayout() {
   }, []);
 
   const initiateInstall = () => {
-    if (!deferredPrompt) return;
     setShowTermsModal(true);
   };
 
   const confirmInstall = async () => {
-    setShowTermsModal(false);
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+       setShowTermsModal(false);
+       return;
+    }
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
     }
+    setShowTermsModal(false);
   };
 
   const handleLogout = async () => {
@@ -184,16 +187,14 @@ export function AppLayout() {
               </div>
             )}
             
-            {deferredPrompt && (
-              <button 
-                onClick={initiateInstall}
-                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200"
-              >
-                <Download size={16} />
-                <span className="hidden sm:inline">Install App</span>
-                <span className="sm:hidden">Install</span>
-              </button>
-            )}
+            <button 
+              onClick={initiateInstall}
+              className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200"
+            >
+              <Download size={16} />
+              <span className="hidden sm:inline">Download</span>
+              <span className="sm:hidden">Download</span>
+            </button>
 
             <button 
               onClick={() => navigate('/home')}
@@ -246,34 +247,67 @@ export function AppLayout() {
               </div>
               
               <div className="p-6 overflow-y-auto text-sm text-gray-600 space-y-4">
-                <p>
-                  <strong>1. Acceptance of Terms:</strong> By downloading and installing NEXORA, you agree to be bound by these Terms of Service.
-                </p>
-                <p>
-                  <strong>2. Local Storage & Data:</strong> This application utilizes browser local storage and caching to function offline. 
-                  By installing, you consent to the storage of this application data on your local device.
-                </p>
-                <p>
-                  <strong>3. Analytics & Usage:</strong> NEXORA may collect diagnostic data to improve service reliability and performance metrics strictly directly proportional to your usage of the system.
-                </p>
-                <p>
-                  <strong>4. Liability Limitation:</strong> NEXORA provides this POS system "as-is". We are not liable for business interruptions, financial calculations manually altered, or loss of device caching.
-                </p>
+                {!deferredPrompt ? (
+                  <>
+                    <p>NEXORA is a Progressive Web App (PWA). You can install it directly to your device for offline use without going through an app store.</p>
+                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                      <strong className="text-gray-900 block mb-2">On iOS (Safari):</strong>
+                      <ol className="list-decimal pl-5 space-y-1">
+                        <li>Tap the <strong>Share</strong> button at the bottom of the screen.</li>
+                        <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+                      </ol>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                      <strong className="text-gray-900 block mb-2">On Desktop (Chrome/Edge):</strong>
+                      <ol className="list-decimal pl-5 space-y-1">
+                        <li>Click the <strong>Install</strong> icon on the right side of the URL/address bar.</li>
+                        <li>Or click the 3-dots menu and select <strong>Install NEXORA</strong>.</li>
+                      </ol>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      <strong>1. Acceptance of Terms:</strong> By downloading and installing NEXORA, you agree to be bound by these Terms of Service.
+                    </p>
+                    <p>
+                      <strong>2. Local Storage & Data:</strong> This application utilizes browser local storage and caching to function offline. 
+                      By installing, you consent to the storage of this application data on your local device.
+                    </p>
+                    <p>
+                      <strong>3. Analytics & Usage:</strong> NEXORA may collect diagnostic data to improve service reliability and performance metrics strictly directly proportional to your usage of the system.
+                    </p>
+                    <p>
+                      <strong>4. Liability Limitation:</strong> NEXORA provides this POS system "as-is". We are not liable for business interruptions, financial calculations manually altered, or loss of device caching.
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="p-6 bg-gray-50 border-t border-gray-100 flex gap-3 shrink-0">
-                <button
-                  onClick={() => setShowTermsModal(false)}
-                  className="flex-1 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
-                >
-                  Decline
-                </button>
-                <button
-                  onClick={confirmInstall}
-                  className="flex-1 px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
-                >
-                  I Accept & Install
-                </button>
+                {!deferredPrompt ? (
+                  <button
+                    onClick={() => setShowTermsModal(false)}
+                    className="w-full px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+                  >
+                    Close
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setShowTermsModal(false)}
+                      className="flex-1 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                    >
+                      Decline
+                    </button>
+                    <button
+                      onClick={confirmInstall}
+                      className="flex-1 px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors shadow-sm"
+                    >
+                      I Accept & Install
+                    </button>
+                  </>
+                )}
               </div>
             </motion.div>
           </div>

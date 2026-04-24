@@ -114,7 +114,6 @@ BEGIN
     -- Get product name for activity log
     SELECT name INTO v_product_name FROM public.products WHERE id = v_product_id;
 
-    -- Alternatively, log item individually, but we'll log summary at the end.
   END LOOP;
 
   -- Create Activity Log
@@ -124,3 +123,73 @@ BEGIN
   RETURN v_sale_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 5. User Roles and Customers (CRM)
+CREATE TABLE IF NOT EXISTS public.user_roles (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'client', 'admin'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.customers (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT,
+  phone TEXT,
+  address TEXT,
+  loyalty_points INTEGER DEFAULT 0,
+  total_purchases NUMERIC(10, 2) DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS for new tables
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
+
+-- 6. Super Admin & Basic RLS for new tables
+DO $$ BEGIN
+  DROP POLICY IF EXISTS "Users can read own role" ON public.user_roles;
+  DROP POLICY IF EXISTS "Superadmin manages all roles" ON public.user_roles;
+  DROP POLICY IF EXISTS "Users can manage own customers" ON public.customers;
+  DROP POLICY IF EXISTS "Superadmin manages all customers" ON public.customers;
+  
+  -- Also add Superadmin override to existing tables
+  DROP POLICY IF EXISTS "Superadmin manages all products" ON public.products;
+  DROP POLICY IF EXISTS "Superadmin manages all sales" ON public.sales;
+  DROP POLICY IF EXISTS "Superadmin manages all sale_items" ON public.sale_items;
+  DROP POLICY IF EXISTS "Superadmin manages all activity logs" ON public.activity_logs;
+END $$;
+
+-- Role policies
+CREATE POLICY "Users can read own role" ON public.user_roles FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Superadmin manages all roles" ON public.user_roles FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+
+-- Customer policies
+CREATE POLICY "Users can manage own customers" ON public.customers FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Superadmin manages all customers" ON public.customers FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+
+-- Admin overrides for existing tables
+CREATE POLICY "Superadmin manages all products" ON public.products FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+CREATE POLICY "Superadmin manages all sales" ON public.sales FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+CREATE POLICY "Superadmin manages all sale_items" ON public.sale_items FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+CREATE POLICY "Superadmin manages all activity logs" ON public.activity_logs FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+
+-- 7. Trigger to automatically create user_roles on sign up
+CREATE OR REPLACE FUNCTION public.handle_new_user() 
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.user_roles (user_id, email, role)
+  VALUES (new.id, new.email, 'pending');
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop trigger if exists
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+-- Create trigger
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
