@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant' | 'system'; content: string }[]>([
-    { role: 'assistant', content: 'Hello! I am the Nexora AI Assistant. How can I help you today?' }
+  const [messages, setMessages] = useState<{ role: 'user' | 'model' | 'system'; content: string }[]>([
+    { role: 'model', content: 'Hello! I am the Nexora AI Assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -27,39 +30,35 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer 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",
-          "HTTP-Referer": window.location.origin,
-          "X-OpenRouter-Title": "NEXORA App",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "openai/gpt-3.5-turbo",
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a helpful assistant for NEXORA, an advanced POS and Inventory Management system. The founder is Hanan Irfan, an 18-year-old student in 4th semester BSCS at KFUEIT University. The co-founder is Ahmad Ali, also a 20-year-old student in 4th semester BSCS at KFUEIT. We focus on offline-first, scalable, fast solutions. Keep answers concise.'
-            },
-            // Note: system messages are generally safe to send, but let's filter just in case
-            ...messages.filter(m => m.role !== 'system'),
-            { role: 'user', content: userMessage }
-          ],
-        })
+      // Build conversation history for Gemini API
+      // We skip system instructions from the history array, and instead provide it in the config
+      const historyContents = messages
+        .filter(m => m.role !== 'system')
+        .map(m => ({
+          role: m.role,
+          parts: [{ text: m.content }]
+        }));
+      
+      // Append the new user message
+      historyContents.push({
+        role: 'user',
+        parts: [{ text: userMessage }]
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: historyContents,
+        config: {
+          systemInstruction: 'You are a helpful assistant for NEXORA, an advanced POS and Inventory Management system. The founder is Hanan Irfan, an 18-year-old student in 4th semester BSCS at KFUEIT University. The co-founder is Ahmad Ali, also a 20-year-old student in 4th semester BSCS at KFUEIT. We focus on offline-first, scalable, fast solutions. Keep answers concise.'
+        }
+      });
 
-      const data = await response.json();
-      const responseContent = data?.choices?.[0]?.message?.content || "I couldn't process that.";
+      const responseContent = response.text || "I couldn't process that.";
       
-      setMessages(prev => [...prev, { role: 'assistant', content: responseContent }]);
+      setMessages(prev => [...prev, { role: 'model', content: responseContent }]);
     } catch (error) {
        console.error("Chatbot Error:", error);
-       setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error connecting to the AI.' }]);
+       setMessages(prev => [...prev, { role: 'model', content: 'Sorry, I encountered an error connecting to the AI.' }]);
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +73,7 @@ export default function Chatbot() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 rounded-full bg-indigo-600 text-white shadow-xl shadow-indigo-600/30 z-50 flex items-center justify-center \${isOpen ? 'hidden' : 'flex'}`}
+        className={`fixed bottom-6 right-6 p-4 rounded-full bg-indigo-600 text-white shadow-xl shadow-indigo-600/30 z-50 flex items-center justify-center ${isOpen ? 'hidden' : 'flex'}`}
       >
         <MessageSquare size={24} />
       </motion.button>
@@ -87,7 +86,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-100"
+            className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-200"
           >
             {/* Header */}
             <div className="bg-indigo-600 p-4 flex justify-between items-center shrink-0">
@@ -103,19 +102,19 @@ export default function Chatbot() {
             {/* Messages */}
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
               {messages.map((msg, idx) => (
-                <div key={idx} className={`flex \${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm \${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white text-gray-800 border border-gray-100 rounded-tl-sm'}`}>
+                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm font-medium ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white text-slate-800 border border-gray-200 rounded-tl-sm'}`}>
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                   </div>
                 </div>
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-gray-100 p-4 rounded-2xl rounded-tl-sm shadow-sm">
+                  <div className="bg-white border border-gray-200 p-4 rounded-2xl rounded-tl-sm shadow-sm">
                     <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-gray-300 animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 rounded-full bg-gray-300 animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-2 h-2 rounded-full bg-gray-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -124,13 +123,13 @@ export default function Chatbot() {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSend} className="p-3 border-t border-gray-100 bg-white shrink-0 flex gap-2">
+            <form onSubmit={handleSend} className="p-3 border-t border-gray-200 bg-white shrink-0 flex gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask me anything..."
-                className="flex-1 px-4 py-2 bg-gray-100 border-transparent focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 rounded-xl text-sm outline-none transition-all"
+                className="flex-1 px-4 py-2 bg-gray-100 border border-transparent focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 rounded-xl text-sm text-slate-900 outline-none transition-all placeholder-slate-400"
                 disabled={isLoading}
               />
               <button

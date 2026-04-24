@@ -19,6 +19,8 @@ import Settings from './pages/Settings';
 import AdminPanel from './pages/AdminPanel';
 import FeaturePage from './pages/FeaturePage';
 import About from './pages/About';
+import Terms from './pages/Terms';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 import Chatbot from './components/Chatbot';
 
@@ -108,6 +110,8 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/docs" element={<Documentation />} />
           <Route path="/about" element={<About />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/features/:featureId" element={<FeaturePage />} />
           

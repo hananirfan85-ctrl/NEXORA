@@ -166,7 +166,7 @@ export default function Login() {
                 </div>
                 <div className="ml-3 text-sm">
                   <label htmlFor="terms" className="font-light text-gray-400">
-                    I agree to the <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">Terms of Service</a> and <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">Privacy Policy</a>
+                    I agree to the <Link to="/terms" className="font-medium text-indigo-400 hover:text-indigo-300">Terms of Service</Link> and <Link to="/privacy-policy" className="font-medium text-indigo-400 hover:text-indigo-300">Privacy Policy</Link>
                   </label>
                 </div>
               </div>
