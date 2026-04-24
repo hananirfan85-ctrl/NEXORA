@@ -106,6 +106,7 @@ export default function Landing() {
                   <Download size={16} />
                   Download App
                 </button>
+                <Link to="/about" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">About</Link>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
                 <Link to="/login" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
               </div>
@@ -266,6 +267,14 @@ export default function Landing() {
               </div>
             </div>
 
+            <div>
+              <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Company</h4>
+              <ul className="space-y-4 font-sans font-light text-sm">
+                <li><Link to="/about" className="hover:text-indigo-400 transition-colors">About Nexora</Link></li>
+                <li><Link to="/docs" className="hover:text-indigo-400 transition-colors">Documentation</Link></li>
+              </ul>
+            </div>
+            
             {/* Platform Links */}
             <div>
               <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Platform</h4>

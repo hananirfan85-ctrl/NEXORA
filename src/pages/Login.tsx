@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { motion } from 'motion/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Hexagon } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!termsAccepted) {
+      setError('You must accept the terms and conditions to login.');
+      return;
+    }
     setLoading(true);
     setError('');
 
@@ -107,7 +112,7 @@ export default function Login() {
           
           <div>
             <div className="flex justify-center text-indigo-600 mb-6">
-              <img src="/logo.png" alt="NEXORA Logo" className="h-12 w-auto object-contain drop-shadow-md" />
+              <Hexagon className="h-12 w-12 text-indigo-500 fill-indigo-500/20 drop-shadow-md" />
             </div>
             <h2 className="text-center text-3xl font-display font-bold text-white tracking-tight">
               Sign in to NEXORA
@@ -147,6 +152,23 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                 />
+              </div>
+              <div className="flex items-start mt-4">
+                <div className="flex items-center h-5">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="h-4 w-4 rounded border-white/20 bg-white/5 text-indigo-600 focus:ring-indigo-600 mt-1 cursor-pointer"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="terms" className="font-light text-gray-400">
+                    I agree to the <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">Terms of Service</a> and <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300">Privacy Policy</a>
+                  </label>
+                </div>
               </div>
             </div>
 
