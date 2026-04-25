@@ -4,8 +4,8 @@ import { ArrowLeft, CheckCircle, Zap, ShieldCheck, BarChart3, Clock, Rocket } fr
 import { Link, useParams } from 'react-router-dom';
 
 const features = {
-  'point-of-sale': {
-    title: 'Point of Sale API & Interface',
+  'billing': {
+    title: 'Fast & Easy Billing',
     subtitle: 'Lightning-fast checkout, built for extreme volume and complete offline reliability.',
     desc: 'The NEXA POS Point of Sale module brings an architectural leap in retail management. We stripped away the bloat of traditional web apps and built a streamlined interface that responds in milliseconds.',
     benefits: ['Sub-second transaction parsing', 'Full offline synchronization', 'Customizable receipt templates', 'Multi-payment tender support', 'Barcode scanner integration'],
@@ -29,11 +29,21 @@ const features = {
         icon: Clock,
         title: "End-of-Day Reconciliation",
         content: "Balance your cash drawer with digital accuracy. The system automatically tracks every drop, payout, and tender type, creating an immutable audit log for total peace of mind at the end of a shift."
+      },
+      {
+        icon: Rocket,
+        title: "Split Tenders & Credit",
+        content: "Allow customers to pay half in cash and half on card effortlessly. Instantly handle advanced payment use-cases without confusing the cashier or requiring manager overrides."
+      },
+      {
+        icon: CheckCircle,
+        title: "Seamless Receipt Customization",
+        content: "Automatically print thermal receipts with your business logo, custom footers, and dynamically updated QR codes for digital verifications."
       }
     ]
   },
-  'inventory-matrix': {
-    title: 'Inventory Matrix Core',
+  'inventory': {
+    title: 'Real-Time Inventory',
     subtitle: 'Track every SKU across all locations with surgical precision.',
     desc: 'Deep inventory management that scales with your business. Get real-time alerts for low stock, track supplier performance, and manage complex variants with ease.',
     benefits: ['Real-time stock deduction', 'Expiry date tracking for perishables', 'Purchase order generation', 'Supplier management portal', 'Low stock AI predictions'],
@@ -41,7 +51,7 @@ const features = {
       {
         icon: BarChart3,
         title: "High-Density Tracking",
-        content: "Map your physical store exactly as it is. Track inventory by aisle, bin, or warehouse zone. Perform cycle counts without shutting down the store using our mobile-optimized auditor tool."
+        content: "Map your physical store exactly as it is. Track inventory by aisle, bin, or warehouse zone. Perform cycle counts without shutting down the store."
       },
       {
         icon: ShieldCheck,
@@ -57,11 +67,21 @@ const features = {
         icon: Rocket,
         title: "Variant & Matrix Management",
         content: "Selling shirts in 5 sizes and 6 colors? Managing 30 SKUs used to be a nightmare. Our grid-based variant manager lets you update prices and stock for complex item families in one screen."
+      },
+      {
+        icon: Clock,
+        title: "Expiration Date Monitoring",
+        content: "For FMCG or pharmaceutical businesses, track item expiration dates perfectly. The system alerts you 30 days before items expire to prioritize discounting or liquidation."
+      },
+      {
+        icon: CheckCircle,
+        title: "Barcode Printing & Generation",
+        content: "Generate and print custom barcode labels directly from the system. Keep your physical inventory scannable and completely synchronized with the database."
       }
     ]
   },
-  'real-time-analytics': {
-    title: 'Analytical Engine',
+  'reports': {
+    title: 'Advanced Reports',
     subtitle: 'Actionable insights, generated the moment you sell.',
     desc: 'Stop guessing and start knowing. Our Analytics engine parses every transaction to give you beautifully rendered charts on profit margins, top-selling items, and performance trends.',
     benefits: ['Live profit/loss dashboards', 'Exportable custom reports', 'Sales predictions based on historical data', 'Multi-branch performance roll-up', 'Cash register balance tracking'],
@@ -79,40 +99,88 @@ const features = {
       {
         icon: ShieldCheck,
         title: "Employee Performance Metrics",
-        content: "See who your top performers are. Track metrics like average basket size, units per transaction, and return rates per employee to optimize your team's training and scheduling."
+        content: "See who your top performers are. Track metrics like average basket size, units per transaction, and return rates per employee."
       },
       {
         icon: Clock,
         title: "Automated Reporting",
         content: "Schedule your critical reports to be generated and emailed directly to your inbox at the end of the day. Stay informed without logging in."
+      },
+      {
+        icon: Zap,
+        title: "Tax & Financial Prep",
+        content: "Export standardized financial logs directly to CSV or Excel. Generate dedicated tax summaries with split rates instantly to simplify your end-of-year accounting."
+      },
+      {
+        icon: CheckCircle,
+        title: "Location-Specific Views",
+        content: "Compare different retail locations side-by-side. Understand foot traffic differences, analyze the best-selling items per branch, and rebalance inventory effectively."
       }
     ]
   },
-  'offline-sync': {
-    title: 'Offline Sync Protocol',
-    subtitle: 'Military-grade data resilience for emerging markets.',
-    desc: 'Our proprietary background sync engine stores all transactions in an advanced IndexedDB matrix. Once a connection is restored, data is immediately flushed to the cloud with zero collision.',
-    benefits: ['Work indefinitely without internet', 'Conflict-free data resolution', 'Automatic background flushing', 'Cloud backup upon connection', 'Seamless multi-device state handling'],
+  'crm': {
+    title: 'CRM & Ledgers',
+    subtitle: 'Track loyalty, manage credit, and retain your best customers.',
+    desc: 'Customer relationships dictate future revenue. Maintain a highly detailed digital ledger for each customer, tracking their credit, purchases, and contact details entirely securely in the cloud.',
+    benefits: ['Granular Ledger Management', 'Automated Credit Due Reminders', 'VIP Customer Segmentation', 'Loyalty Points Auto-Calculation', 'Bulk Message Integration Ready'],
     sections: [
       {
-        icon: Zap,
-        title: "Zero UI Blocking",
-        content: "When the internet drops, your cashiers won't even notice. The POS interface never freezes waiting for a network timeout. Sales are instantly committed locally and queued."
+        icon: ShieldCheck,
+        title: "Encrypted Customer Databases",
+        content: "Keep all client PII safely encrypted. Phone numbers, emails, and physical addresses are safely stored away from the POS register but accessible for marketing."
       },
       {
-        icon: ShieldCheck,
-        title: "Conflict Resolution",
-        content: "What happens if a product is sold offline while its price is updated online? NEXA POS's sync matrix uses timestamp-based conflict resolution to ensure logical data integrity upon reconnection."
+        icon: Zap,
+        title: "Digital Customer Ledgers",
+        content: "Replace manual 'Udhar' books with instant digital equivalents. Record charges and payments, securely tracking the balance owed by VIP customers automatically across the entire business."
       },
       {
         icon: Rocket,
-        title: "Multi-Node Flushing",
-        content: "If you have 5 registers acting offline, they seamlessly buffer their data. Once online, they utilize a chunked payload delivery system to prevent server overwhelming and ensure every byte is safely stored."
+        title: "Loyalty Scoring Algorithm",
+        content: "Every purchase automatically factors into the customer's loyalty profile. Track their VIP status objectively, based strictly on the metrics of their purchase volume and engagement."
       },
       {
         icon: Clock,
-        title: "State Recovery",
-        content: "Even if the browser crashes or the device loses power during an offline session, the local database ensures that pending transactions are recovered upon reboot."
+        title: "Transaction History Log",
+        content: "Recall every previous receipt generated by a specific customer. Simplify warranty claims or product returns seamlessly without needing a physical receipt paper."
+      },
+      {
+        icon: BarChart3,
+        title: "Instant Advance Tracking",
+        content: "If a customer over-pays or deposits an advance for a special order, the ledger intuitively tracks 'Advance' balances natively, deducting them automatically on future checkouts."
+      }
+    ]
+  },
+  'users': {
+    title: 'Multi-User Access',
+    subtitle: 'Granular permissions securely gating your empire.',
+    desc: 'Scale your business by building out your workforce safely. Provide roles and strict permissions to various employees, giving them exactly what they need, and nothing more.',
+    benefits: ['Role Based Access Control', 'Admin Override Capabilities', 'Real-time session management', 'Immutable Audit Trails', 'Supervisor Action Tracking'],
+    sections: [
+      {
+        icon: ShieldCheck,
+        title: "Row Level Security (RLS)",
+        content: "Postgres RLS is automatically enforced. Standard cashiers have absolutely zero programmatic ability to access aggregate financial data or sensitive analytics, even if they tried."
+      },
+      {
+        icon: Zap,
+        title: "Pending Approval Tiers",
+        content: "Every new user account created requires strict Super Admin verification. You dictate who joins your digital environment. Prevent unauthorized endpoints permanently."
+      },
+      {
+        icon: Rocket,
+        title: "Cashier vs Manager Views",
+        content: "Provide managers with access to CRM and Returns processing, while limiting cashiers strictly to the POS module and closing cash drops. Granular views enhance layout focus."
+      },
+      {
+        icon: Clock,
+        title: "Shift Tracking Audits",
+        content: "Every action carries a UUID. By tracking precisely who processed which transaction, or deleted which invoice, you ensure absolute security and accountability across all cashiers."
+      },
+      {
+        icon: BarChart3,
+        title: "Remote Revocation",
+        content: "If an employee leaves the company, instantly revoke their access remotely. Their instances will be immediately terminated with active sessions securely timed out."
       }
     ]
   }

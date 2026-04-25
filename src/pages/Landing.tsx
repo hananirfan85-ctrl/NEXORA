@@ -131,7 +131,20 @@ export default function Landing() {
                   Install POS software
                 </button>
                 <Link to="/about" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">About</Link>
+                <div className="relative group">
+                  <button className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
+                    Features <ChevronDown size={14} />
+                  </button>
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden text-sm">
+                    <Link to="/features/billing" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Fast & Easy Billing</Link>
+                    <Link to="/features/inventory" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Real-Time Inventory</Link>
+                    <Link to="/features/reports" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Advanced Reports</Link>
+                    <Link to="/features/crm" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">CRM & Ledgers</Link>
+                    <Link to="/features/users" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Multi-User Access</Link>
+                  </div>
+                </div>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
+                <Link to="/signup" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Sign Up</Link>
                 <Link to="/login" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
               </div>
             </div>
@@ -153,7 +166,7 @@ export default function Landing() {
                 NEXA POS is an advanced Point of Sale (POS) system designed to help businesses manage sales, billing, inventory, and customers in one powerful platform.
               </motion.p>
               <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <Link to="/login" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-indigo-600 text-white px-8 py-4 rounded-xl font-sans font-bold hover:bg-indigo-500 hover:-translate-y-1 transition-all shadow-xl shadow-indigo-600/30 text-base">
+                <Link to="/signup" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-indigo-600 text-white px-8 py-4 rounded-xl font-sans font-bold hover:bg-indigo-500 hover:-translate-y-1 transition-all shadow-xl shadow-indigo-600/30 text-base">
                   Get Started Now
                   <ArrowRight size={20} />
                 </Link>
@@ -353,7 +366,7 @@ export default function Landing() {
               <p className="text-xl text-indigo-200 font-light mb-10 max-w-2xl mx-auto">
                 Start managing your business smarter with NEXA POS System today. Experience fast billing, real-time inventory tracking, and complete business control in one powerful solution.
               </p>
-              <Link to="/login" className="inline-flex items-center gap-3 bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl text-lg">
+              <Link to="/signup" className="inline-flex items-center gap-3 bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl text-lg">
                 Get Started Now <ArrowRight size={20} />
               </Link>
             </motion.div>
@@ -392,6 +405,7 @@ export default function Landing() {
                 <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
                 <li><Link to="/industries" className="hover:text-indigo-400 transition-colors">Industries</Link></li>
                 <li><Link to="/blog" className="hover:text-indigo-400 transition-colors">Blog</Link></li>
+                <li><Link to="/signup" className="hover:text-indigo-400 transition-colors">Sign Up</Link></li>
               </ul>
             </div>
             

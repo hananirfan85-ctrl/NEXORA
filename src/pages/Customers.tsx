@@ -36,6 +36,7 @@ export default function Customers() {
 
   // New Customer Form
   const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', address: '' });
+  const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
 
   useEffect(() => {
     fetchCustomers();
@@ -61,13 +62,35 @@ export default function Customers() {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) return;
 
-    await supabase.from('customers').insert([{
-      user_id: userData.user.id,
-      ...newCustomer
-    }]);
+    if (editingCustomer) {
+      await supabase.from('customers').update({
+        name: newCustomer.name,
+        email: newCustomer.email,
+        phone: newCustomer.phone,
+        address: newCustomer.address
+      }).eq('id', editingCustomer.id);
+    } else {
+      await supabase.from('customers').insert([{
+        user_id: userData.user.id,
+        ...newCustomer
+      }]);
+    }
 
     setShowAddModal(false);
+    setEditingCustomer(null);
     setNewCustomer({ name: '', email: '', phone: '', address: '' });
+    fetchCustomers();
+  };
+
+  const handleEditClick = (c: Customer) => {
+    setEditingCustomer(c);
+    setNewCustomer({ name: c.name, email: c.email || '', phone: c.phone || '', address: c.address || '' });
+    setShowAddModal(true);
+  };
+
+  const handleDeleteCustomer = async (id: string) => {
+    if(!window.confirm('Are you sure you want to delete this customer?')) return;
+    await supabase.from('customers').delete().eq('id', id);
     fetchCustomers();
   };
 
@@ -263,6 +286,18 @@ export default function Customers() {
                       >
                         <BookOpen size={14} /> Ledger
                       </button>
+                      <button 
+                        onClick={() => handleEditClick(c)}
+                        className="px-3 py-1.5 text-xs font-bold bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-200"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteCustomer(c.id)}
+                        className="px-3 py-1.5 text-xs font-bold bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition border border-red-200"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -358,8 +393,31 @@ export default function Customers() {
                             <p className="text-xs text-gray-500 mt-0.5">{format(new Date(entry.created_at), 'MMM d, yyyy h:mm a')}</p>
                           </div>
                         </div>
-                        <div className={`font-mono font-bold text-lg ${entry.type === 'charge' ? 'text-red-600' : 'text-emerald-600'}`}>
-                          {entry.type === 'charge' ? '+' : '-'}{formatCurrency(entry.amount)}
+                        <div className="flex items-center gap-4">
+                          <div className={`font-mono font-bold text-lg ${entry.type === 'charge' ? 'text-red-600' : 'text-emerald-600'}`}>
+                            {entry.type === 'charge' ? '+' : '-'}{formatCurrency(entry.amount)}
+                          </div>
+                          <button 
+                            onClick={async () => {
+                              if(!window.confirm('Delete this ledger entry?')) return;
+                              await supabase.from('customer_ledgers').delete().eq('id', entry.id);
+                              
+                              let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
+                              if (entry.type === 'charge') {
+                                newBalance -= entry.amount;
+                              } else {
+                                newBalance += entry.amount;
+                              }
+                              await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
+                              
+                              setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
+                              fetchLedger(selectedCustomerForLedger.id);
+                              fetchCustomers();
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700 transition"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -413,10 +471,19 @@ export default function Customers() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Address <span className="text-gray-400 font-normal">(Optional)</span></label>
+                  <input
+                    type="text"
+                    value={newCustomer.address}
+                    onChange={e => setNewCustomer({...newCustomer, address: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
                 <div className="pt-4 flex gap-3">
                   <button
                     type="button"
-                    onClick={() => setShowAddModal(false)}
+                    onClick={() => { setShowAddModal(false); setEditingCustomer(null); setNewCustomer({ name: '', email: '', phone: '', address: '' }); }}
                     className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
                   >
                     Cancel
@@ -425,7 +492,7 @@ export default function Customers() {
                     type="submit"
                     className="flex-1 px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium transition"
                   >
-                    Save Customer
+                    {editingCustomer ? 'Update Customer' : 'Save Customer'}
                   </button>
                 </div>
               </form>
