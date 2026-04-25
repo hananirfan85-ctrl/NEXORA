@@ -27,18 +27,22 @@ export default function AdminPanel() {
     setError('');
     
     const { data, error } = await supabase.rpc('get_all_users_with_roles');
+    // Also check if get_my_role exists to ensure full setup
+    const { error: roleError } = await supabase.rpc('get_my_role');
+    
     console.log("Admin fetch users result:", data, error);
     
-    if (error) {
+    if (error || (roleError && roleError.message.includes('Could not find'))) {
       if (
-        error.message.includes('Could not find') || 
-        error.message.includes('does not exist') ||
-        error.message.includes('Access Denied')
+        (error && (error.message.includes('Could not find') || 
+         error.message.includes('does not exist') ||
+         error.message.includes('Access Denied'))) ||
+        (roleError && roleError.message.includes('Could not find'))
       ) {
         setNeedsSetup(true);
-        setError(error.message); // store it anyway so we can see it
+        setError(error ? error.message : "Missing get_my_role function. Please run the SQL setup code again."); // store it anyway so we can see it
       } else {
-        setError(error.message);
+        setError(error ? error.message : "Unknown error");
         setNeedsSetup(false);
       }
     } else {
@@ -130,9 +134,17 @@ $$ LANGUAGE plpgsql;
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Super Admin Control Panel
+            Clients Management (Super Admin)
           </h1>
           <p className="text-gray-500 text-sm mt-1">Manage platform clients, verify purchases, and grant roles.</p>
+        </div>
+      </div>
+      
+      <div className="bg-indigo-50 border border-indigo-200 text-indigo-800 p-4 rounded-xl flex gap-3 text-sm">
+        <Users className="shrink-0 mt-0.5" size={20} />
+        <div>
+          <strong className="block mb-1 text-base">Important Notice Regarding Clients Approvals:</strong>
+          Since you are testing this on your deployed Vercel application (nexorasystem.vercel.app), your clients will <strong>still see the pending approval page</strong> until you actually <strong>push these new code updates to your GitHub repository</strong> so Vercel can rebuild the app with the newly added backend SQL integrations. <br className="my-2" /> Make sure clients refresh their page after the new deployment finishes on Vercel.
         </div>
       </div>
 

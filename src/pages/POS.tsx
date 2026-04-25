@@ -17,13 +17,24 @@ export default function POS() {
   
   const [processing, setProcessing] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
-  const [completedSale, setCompletedSale] = useState<{ id: string, amount: number, items: CartItem[] } | null>(null);
+  const [completedSale, setCompletedSale] = useState<{ id: string, amount: number, items: CartItem[], cashReceived: number, change: number } | null>(null);
 
   const [showClearCart, setShowClearCart] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [cashReceived, setCashReceived] = useState('');
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.selling_price * item.cartQuantity), 0);
+  const cartProfit = cart.reduce((sum, item) => sum + ((item.selling_price - item.cost_price) * item.cartQuantity), 0);
 
   const clearEntireCart = () => {
     setCart([]);
     setShowClearCart(false);
+  };
+
+  const handleCheckoutClick = () => {
+    if (cart.length === 0 || !user) return;
+    setCashReceived(cartTotal.toString());
+    setShowPaymentModal(true);
   };
 
   useEffect(() => {
@@ -72,12 +83,13 @@ export default function POS() {
     return searchMatch && categoryMatch;
   });
 
-  const cartTotal = cart.reduce((sum, item) => sum + (item.selling_price * item.cartQuantity), 0);
-  const cartProfit = cart.reduce((sum, item) => sum + ((item.selling_price - item.cost_price) * item.cartQuantity), 0);
-
-  const completeSale = async () => {
+  const completeSale = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (cart.length === 0 || !user) return;
     setProcessing(true);
+
+    const receivedAmount = parseFloat(cashReceived) || cartTotal;
+    const changeAmount = receivedAmount - cartTotal;
 
     // Call Supabase RPC
     const itemsJson = cart.map(item => ({
@@ -101,8 +113,9 @@ export default function POS() {
       alert('Error processing sale. Is your Supabase RPC set up? Check the console.');
       // Fallback: manually insert if RPC is missing, but constraints require RPC for atomic operations
     } else {
-      setCompletedSale({ id: saleId, amount: cartTotal, items: [...cart] });
+      setCompletedSale({ id: saleId, amount: cartTotal, items: [...cart], cashReceived: receivedAmount, change: changeAmount });
       setShowReceipt(true);
+      setShowPaymentModal(false);
       setCart([]);
       fetchProducts(); // Refresh stock
     }
@@ -158,6 +171,14 @@ export default function POS() {
             <span>TOTAL</span>
             <span>${formatCurrency(completedSale.amount)}</span>
           </div>
+          <div class="item-row" style="font-size: 12px; margin-top: 2px;">
+            <span>Cash</span>
+            <span>${formatCurrency(completedSale.cashReceived)}</span>
+          </div>
+          <div class="item-row" style="font-size: 12px; margin-top: 2px;">
+            <span>Change</span>
+            <span>${formatCurrency(completedSale.change)}</span>
+          </div>
           <div class="line"></div>
 
           <div class="center" style="margin-top: 15px; font-size: 12px; white-space: pre-wrap;">
@@ -195,6 +216,8 @@ export default function POS() {
           
           <div className="border-t border-b py-4 my-6 border-dashed space-y-2">
             <div className="flex justify-between font-medium"><span>Amount Paid</span><span>{formatCurrency(completedSale?.amount || 0)}</span></div>
+            <div className="flex justify-between text-gray-500 text-sm mt-1"><span>Cash Received</span><span>{formatCurrency(completedSale?.cashReceived || 0)}</span></div>
+            <div className="flex justify-between text-emerald-600 font-bold mt-2"><span>Change Returned</span><span>{formatCurrency(completedSale?.change || 0)}</span></div>
           </div>
 
           <div className="flex gap-4 justify-center">
@@ -339,11 +362,11 @@ export default function POS() {
             </div>
           </div>
           <button
-            onClick={completeSale}
+            onClick={handleCheckoutClick}
             disabled={cart.length === 0 || processing}
             className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:bg-gray-300 disabled:active:scale-100 text-white font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
           >
-            {processing ? 'Processing...' : 'Complete Sale'}
+            {processing ? 'Processing...' : 'Checkout'}
             {!processing && <span className="opacity-70 font-normal">| {formatCurrency(cartTotal)}</span>}
           </button>
         </div>
@@ -378,6 +401,67 @@ export default function POS() {
                 Clear Cart
               </button>
             </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Payment Entry Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden p-6"
+          >
+            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Complete Payment</h3>
+            <form onSubmit={completeSale}>
+              <div className="space-y-4 mb-6">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-500 font-medium">Total Amount Due</span>
+                  <span className="text-xl font-bold text-gray-900">{formatCurrency(cartTotal)}</span>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cash Received</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rs</span>
+                    <input
+                      type="number"
+                      autoFocus
+                      required
+                      min={cartTotal} // Ensure they enter enough or default to total
+                      step="0.01"
+                      value={cashReceived}
+                      onChange={(e) => setCashReceived(e.target.value)}
+                      onFocus={(e) => e.target.select()}
+                      className="w-full pl-9 pr-4 py-3 text-lg font-bold border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
+                </div>
+                
+                {parseFloat(cashReceived) >= cartTotal && (
+                  <div className="flex justify-between items-center py-3 bg-emerald-50 px-4 rounded-lg border border-emerald-100">
+                    <span className="text-emerald-800 font-medium">Change to Return</span>
+                    <span className="text-xl font-bold text-emerald-700">{formatCurrency((parseFloat(cashReceived) || cartTotal) - cartTotal)}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPaymentModal(false)}
+                  className="px-4 py-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 w-full transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={processing || (parseFloat(cashReceived) < cartTotal)}
+                  className="px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 disabled:bg-indigo-300 w-full transition-colors flex justify-center items-center gap-2"
+                >
+                  {processing ? 'Processing...' : 'Confirm Payment'}
+                </button>
+              </div>
+            </form>
           </motion.div>
         </div>
       )}
