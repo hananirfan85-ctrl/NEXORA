@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import { format } from 'date-fns';
-import { Users, Search, Plus, MailOpen, TrendingUp, Filter, Star } from 'lucide-react';
+import { Users, Search, Plus, MailOpen, TrendingUp, Filter, Star, BookOpen, Clock, LogIn, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { formatCurrency } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import AdminPanel from './AdminPanel';
 
 type Customer = {
   id: string;
@@ -13,16 +15,25 @@ type Customer = {
   address: string;
   loyalty_points: number;
   total_purchases: number;
+  ledger_balance: number;
   created_at: string;
 };
 
 export default function Customers() {
+  const { user } = useAuth();
+
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string>('all');
   
+  // Ledger State
+  const [selectedCustomerForLedger, setSelectedCustomerForLedger] = useState<Customer | null>(null);
+  const [ledgerEntries, setLedgerEntries] = useState<any[]>([]);
+  const [ledgerLoading, setLedgerLoading] = useState(false);
+  const [newLedgerEntry, setNewLedgerEntry] = useState({ amount: '', type: 'charge', description: '' });
+
   // New Customer Form
   const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', address: '' });
 
@@ -60,12 +71,64 @@ export default function Customers() {
     fetchCustomers();
   };
 
+  const openLedger = async (customer: Customer) => {
+    setSelectedCustomerForLedger(customer);
+    fetchLedger(customer.id);
+  };
+
+  const fetchLedger = async (customerId: string) => {
+    setLedgerLoading(true);
+    const { data } = await supabase
+      .from('customer_ledgers')
+      .select('*')
+      .eq('customer_id', customerId)
+      .order('created_at', { ascending: false });
+      
+    if (data) setLedgerEntries(data);
+    setLedgerLoading(false);
+  };
+
+  const handleAddLedgerEntry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedCustomerForLedger || !user) return;
+    const amount = parseFloat(newLedgerEntry.amount);
+    if (isNaN(amount) || amount <= 0) return;
+    
+    const entryType = newLedgerEntry.type;
+
+    await supabase.from('customer_ledgers').insert([{
+      customer_id: selectedCustomerForLedger.id,
+      user_id: user.id,
+      amount: amount,
+      type: entryType,
+      description: newLedgerEntry.description
+    }]);
+
+    // Update customer ledger_balance
+    let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
+    if (entryType === 'charge') {
+       newBalance += amount;
+    } else {
+       newBalance -= amount;
+    }
+
+    await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
+    
+    setNewLedgerEntry({ amount: '', type: 'charge', description: '' });
+    fetchLedger(selectedCustomerForLedger.id);
+    fetchCustomers();
+    
+    // Update local state for immediate feedback
+    setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
+  };
+
   const filteredCustomers = customers.filter(c => {
     const matchesSearch = c.name.toLowerCase().includes(search.toLowerCase()) || 
                           (c.email || '').toLowerCase().includes(search.toLowerCase());
     if (!matchesSearch) return false;
     
     if (selectedTag === 'vip') return c.total_purchases > 50000;
+    if (selectedTag === 'due') return Number(c.ledger_balance) > 0;
     if (selectedTag === 'new') return new Date(c.created_at).getTime() > Date.now() - 30 * 24 * 60 * 60 * 1000;
     return true;
   });
@@ -75,7 +138,7 @@ export default function Customers() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Customer Management</h1>
-          <p className="text-gray-500 text-sm mt-1">CRM: Track loyalty, purchase history, and segments.</p>
+          <p className="text-gray-500 text-sm mt-1">CRM: Track loyalty, ledgers, and purchase history.</p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
@@ -108,12 +171,12 @@ export default function Customers() {
          </div>
          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
            <div>
-             <p className="text-sm text-gray-500 font-medium">Avg Lifetime Value</p>
-             <p className="text-2xl font-bold text-gray-900 mt-1">
-               {formatCurrency(customers.length ? customers.reduce((acc, c) => acc + c.total_purchases, 0) / customers.length : 0)}
+             <p className="text-sm text-gray-500 font-medium">Total Ledger Due</p>
+             <p className="text-2xl font-bold text-red-600 mt-1">
+               {formatCurrency(customers.reduce((acc, c) => acc + (Number(c.ledger_balance) > 0 ? Number(c.ledger_balance) : 0), 0))}
              </p>
            </div>
-           <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+           <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600">
              <TrendingUp size={20} />
            </div>
          </div>
@@ -134,21 +197,21 @@ export default function Customers() {
           <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
              <button 
                onClick={() => setSelectedTag('all')}
-               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors \${selectedTag === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${selectedTag === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
              >
                All
              </button>
              <button 
-               onClick={() => setSelectedTag('vip')}
-               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors \${selectedTag === 'vip' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+               onClick={() => setSelectedTag('due')}
+               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${selectedTag === 'due' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
              >
-               VIPs
+               Ledger Due
              </button>
              <button 
-               onClick={() => setSelectedTag('new')}
-               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors \${selectedTag === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+               onClick={() => setSelectedTag('vip')}
+               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${selectedTag === 'vip' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
              >
-               New (30d)
+               VIPs
              </button>
           </div>
         </div>
@@ -160,7 +223,7 @@ export default function Customers() {
                 <th className="p-4 font-medium">Customer Details</th>
                 <th className="p-4 font-medium">Contact</th>
                 <th className="p-4 font-medium">Loyalty Score</th>
-                <th className="p-4 font-medium">Total Lifetime Spend</th>
+                <th className="p-4 font-medium">Ledger Balance</th>
                 <th className="p-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -187,12 +250,18 @@ export default function Customers() {
                          <span className="font-bold text-gray-700">{c.loyalty_points} <span className="text-xs font-normal text-gray-400">pts</span></span>
                       </div>
                     </td>
-                    <td className="p-4 font-mono font-medium text-indigo-700">
-                      {formatCurrency(c.total_purchases)}
+                    <td className="p-4">
+                      <div className={`font-mono font-medium ${Number(c.ledger_balance) > 0 ? 'text-red-600' : Number(c.ledger_balance) < 0 ? 'text-emerald-600' : 'text-gray-500'}`}>
+                        {Number(c.ledger_balance) > 0 ? 'Due: ' : Number(c.ledger_balance) < 0 ? 'Adv: ' : ''}
+                        {formatCurrency(Math.abs(Number(c.ledger_balance) || 0))}
+                      </div>
                     </td>
-                    <td className="p-4 text-right space-x-2">
-                      <button className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Send Payment Reminder">
-                        <MailOpen size={16} />
+                    <td className="p-4 text-right space-x-2 flex justify-end gap-2">
+                      <button 
+                        onClick={() => openLedger(c)}
+                        className="px-3 py-1.5 text-xs font-bold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg transition border border-indigo-200 flex items-center gap-1.5"
+                      >
+                        <BookOpen size={14} /> Ledger
                       </button>
                     </td>
                   </tr>
@@ -202,6 +271,105 @@ export default function Customers() {
           </table>
         </div>
       </div>
+
+      {/* Ledger Modal */}
+      <AnimatePresence>
+        {selectedCustomerForLedger && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <BookOpen size={20} className="text-indigo-600" />
+                    {selectedCustomerForLedger.name}'s Ledger
+                  </h3>
+                  <div className={`mt-1 text-sm font-bold ${Number(selectedCustomerForLedger.ledger_balance) > 0 ? 'text-red-600' : 'text-emerald-600'}`}>
+                    Current Balance: {Number(selectedCustomerForLedger.ledger_balance) > 0 ? 'Due ' : 'Advance '} 
+                    {formatCurrency(Math.abs(Number(selectedCustomerForLedger.ledger_balance) || 0))}
+                  </div>
+                </div>
+                <button onClick={() => setSelectedCustomerForLedger(null)} className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg">
+                  <Plus className="rotate-45" size={20} />
+                </button>
+              </div>
+
+              <div className="p-4 border-b border-gray-100 shrink-0 bg-white">
+                <form onSubmit={handleAddLedgerEntry} className="flex gap-3 items-end">
+                  <div className="w-1/4">
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Type</label>
+                    <select
+                      value={newLedgerEntry.type}
+                      onChange={e => setNewLedgerEntry({...newLedgerEntry, type: e.target.value})}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none"
+                    >
+                      <option value="charge">Given on Credit (Charge)</option>
+                      <option value="payment">Payment Received</option>
+                    </select>
+                  </div>
+                  <div className="w-1/4">
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Amount</label>
+                    <input
+                      required
+                      type="number"
+                      min="0.01" step="0.01"
+                      value={newLedgerEntry.amount}
+                      onChange={e => setNewLedgerEntry({...newLedgerEntry, amount: e.target.value})}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                    <input
+                      type="text"
+                      required
+                      value={newLedgerEntry.description}
+                      onChange={e => setNewLedgerEntry({...newLedgerEntry, description: e.target.value})}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none"
+                      placeholder="e.g. Paid cash, Or items bought"
+                    />
+                  </div>
+                  <button type="submit" className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700">
+                    Add
+                  </button>
+                </form>
+              </div>
+
+              <div className="flex-1 overflow-auto bg-gray-50">
+                {ledgerLoading ? (
+                  <div className="p-8 text-center text-gray-500">Loading ledger...</div>
+                ) : ledgerEntries.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">No ledger entries yet.</div>
+                ) : (
+                  <div className="divide-y divide-gray-100">
+                    {ledgerEntries.map(entry => (
+                      <div key={entry.id} className="p-4 flex items-center justify-between bg-white hover:bg-gray-50/50 transition">
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2 rounded-full ${entry.type === 'charge' ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                            {entry.type === 'charge' ? <ArrowUpRight size={18} /> : <ArrowDownRight size={18} />}
+                          </div>
+                          <div>
+                            <p className="font-bold text-gray-900">{entry.description}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{format(new Date(entry.created_at), 'MMM d, yyyy h:mm a')}</p>
+                          </div>
+                        </div>
+                        <div className={`font-mono font-bold text-lg ${entry.type === 'charge' ? 'text-red-600' : 'text-emerald-600'}`}>
+                          {entry.type === 'charge' ? '+' : '-'}{formatCurrency(entry.amount)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Add Customer Modal */}
       <AnimatePresence>
@@ -268,3 +436,4 @@ export default function Customers() {
     </div>
   );
 }
+

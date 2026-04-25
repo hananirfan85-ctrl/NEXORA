@@ -83,6 +83,42 @@ INSERT INTO public.user_roles (user_id, email, role)
 SELECT id, email, 'pending' FROM auth.users
 ON CONFLICT (user_id) DO NOTHING;
 
+-- === CRM AND LEDGER SETUP ===
+CREATE TABLE IF NOT EXISTS public.customers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  email TEXT,
+  phone TEXT,
+  address TEXT,
+  loyalty_points INTEGER DEFAULT 0,
+  total_purchases NUMERIC DEFAULT 0,
+  ledger_balance NUMERIC DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS for customers
+ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own customers" 
+ON public.customers FOR ALL USING (auth.uid() = user_id);
+
+CREATE TABLE IF NOT EXISTS public.customer_ledgers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID NOT NULL REFERENCES public.customers(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  amount NUMERIC NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('charge', 'payment')),
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.customer_ledgers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own customer ledgers"
+ON public.customer_ledgers FOR ALL USING (auth.uid() = user_id);
+-- ===============================
+
 -- Run this in your Supabase SQL Editor to enable the advanced CRM Admin Panel
 CREATE OR REPLACE FUNCTION get_all_users_with_roles()
 RETURNS TABLE (id uuid, email text, role text, created_at timestamptz)

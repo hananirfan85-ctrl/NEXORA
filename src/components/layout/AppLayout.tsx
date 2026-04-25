@@ -97,7 +97,13 @@ export function AppLayout() {
             // Only admin can access POS/dashboard stuff if requested, 
             // but for now let's just make sure Admin Panel is only for admin.
             // "admin able to access the dashoboard and other features to use this and admin only access to this email hananirfan85@gmail.com"
-            const isAdminRoute = item.path === '/admin';
+            const isAdminPath = item.path === '/admin';
+            
+            // Remove Customers page ONLY in admin panel account
+            if (user?.email === 'hananirfan85@gmail.com' && item.name === 'Customers') {
+              return null;
+            }
+            
             return (
               <NavLink
                 key={item.name}
