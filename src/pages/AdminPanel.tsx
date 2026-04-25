@@ -117,6 +117,25 @@ ALTER TABLE public.customer_ledgers ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can manage their own customer ledgers"
 ON public.customer_ledgers FOR ALL USING (auth.uid() = user_id);
+
+-- === STORE SETTINGS & UNITS ===
+CREATE TABLE IF NOT EXISTS public.store_settings (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  store_type TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.store_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage their own store settings" 
+ON public.store_settings FOR ALL USING (auth.uid() = user_id);
+
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='products' AND column_name='unit') THEN 
+        ALTER TABLE public.products ADD COLUMN unit TEXT; 
+    END IF; 
+END $$;
 -- ===============================
 
 -- Run this in your Supabase SQL Editor to enable the advanced CRM Admin Panel

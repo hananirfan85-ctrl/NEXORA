@@ -16,19 +16,29 @@ export default function Inventory() {
   // Form state
   const [formLoad, setFormLoad] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [storeType, setStoreType] = useState<string>('general');
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     cost_price: 0,
     selling_price: 0,
     stock: 0,
+    unit: '',
   });
 
   const categories = Array.from(new Set(products.map(p => p.category)));
 
   useEffect(() => {
-    if (user) fetchProducts();
+    if (user) {
+      fetchProducts();
+      fetchStoreSettings();
+    }
   }, [user]);
+
+  const fetchStoreSettings = async () => {
+    const { data } = await supabase.from('store_settings').select('store_type').eq('user_id', user?.id).maybeSingle();
+    if (data) setStoreType(data.store_type);
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -67,7 +77,8 @@ export default function Inventory() {
           category: formData.category,
           cost_price: formData.cost_price,
           selling_price: formData.selling_price,
-          stock: formData.stock
+          stock: formData.stock,
+          unit: formData.unit
         })
         .eq('id', editingId);
 
@@ -137,10 +148,11 @@ export default function Inventory() {
         cost_price: product.cost_price,
         selling_price: product.selling_price,
         stock: product.stock,
+        unit: product.unit || '',
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', category: '', cost_price: 0, selling_price: 0, stock: 0 });
+      setFormData({ name: '', category: '', cost_price: 0, selling_price: 0, stock: 0, unit: '' });
     }
     setIsModalOpen(true);
   };
@@ -225,7 +237,7 @@ export default function Inventory() {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`font-medium ${product.stock <= 5 ? 'text-red-600' : 'text-gray-900'}`}>
-                        {product.stock}
+                        {product.stock} {product.unit}
                       </span>
                     </td>
                     <td className="px-6 py-4">{formatCurrency(product.cost_price)}</td>
@@ -321,12 +333,54 @@ export default function Inventory() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Available Stock</label>
-                <input required type="text" inputMode="numeric" pattern="[0-9]*" value={formData.stock === 0 ? '' : formData.stock} onChange={e => {
-                  const val = e.target.value.replace(/[^0-9]/g, '');
-                  setFormData({...formData, stock: val ? parseInt(val) : 0})
-                }} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Available Quantity</label>
+                  <input required type="text" inputMode="numeric" pattern="[0-9]*" value={formData.stock === 0 ? '' : formData.stock} onChange={e => {
+                    const val = e.target.value.replace(/[^0-9]/g, '');
+                    setFormData({...formData, stock: val ? parseInt(val) : 0})
+                  }} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                  <select 
+                    value={formData.unit} 
+                    onChange={e => setFormData({...formData, unit: e.target.value})} 
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                  >
+                    <option value="">Select Unit</option>
+                    {storeType === 'general' && (
+                      <>
+                        <option value="pcs">Pieces (pcs)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="boxes">Boxes</option>
+                        <option value="packs">Packs</option>
+                        <option value="liters">Liters</option>
+                      </>
+                    )}
+                    {storeType === 'medical' && (
+                      <>
+                        <option value="strips">Strips</option>
+                        <option value="tablets">Tablets</option>
+                        <option value="bottles">Bottles</option>
+                        <option value="syrups">Syrups</option>
+                        <option value="injections">Injections</option>
+                        <option value="tubes">Tubes</option>
+                      </>
+                    )}
+                    {storeType === 'other' && (
+                      <>
+                        <option value="items">Items</option>
+                        <option value="units">Units</option>
+                        <option value="lbs">Pounds (lbs)</option>
+                        <option value="meters">Meters</option>
+                        <option value="yards">Yards</option>
+                        <option value="tons">Tons</option>
+                      </>
+                    )}
+                  </select>
+                </div>
               </div>
 
               <div className="pt-4 flex justify-end gap-3 flex-wrap">

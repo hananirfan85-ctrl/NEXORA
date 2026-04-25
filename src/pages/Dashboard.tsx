@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { ShoppingCart, Package, DollarSign, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, Package, DollarSign, AlertTriangle, Store } from 'lucide-react';
 import { formatCurrency } from '../lib/utils';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +14,10 @@ export default function Dashboard() {
     lowStock: 0,
   });
   const [loading, setLoading] = useState(true);
+  
+  // Store Setup State
+  const [showSetupModal, setShowSetupModal] = useState(false);
+  const [storeType, setStoreType] = useState('general');
 
   useEffect(() => {
     if (user) fetchDashboardData();
@@ -22,6 +26,14 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     setLoading(true);
     
+    if (user) {
+      // Check store settings
+      const { data: settings } = await supabase.from('store_settings').select('store_type').eq('user_id', user.id).maybeSingle();
+      if (!settings && user.email !== 'hananirfan85@gmail.com') {
+        setShowSetupModal(true);
+      }
+    }
+
     // Get today's bounds
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -59,6 +71,18 @@ export default function Dashboard() {
       lowStock: lowStockCount
     });
     setLoading(false);
+  };
+  
+  const saveStoreSetup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    
+    await supabase.from('store_settings').insert([{
+      user_id: user.id,
+      store_type: storeType
+    }]);
+    
+    setShowSetupModal(false);
   };
 
   return (
@@ -153,6 +177,55 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {showSetupModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden p-6 animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-center mb-4">
+              <div className="bg-indigo-100 p-4 rounded-full text-indigo-600">
+                <Store size={32} />
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Welcome to NEXORA!</h3>
+            <p className="text-gray-500 text-sm text-center mb-6">Let's set up your store. What type of business do you run?</p>
+            
+            <form onSubmit={saveStoreSetup}>
+              <div className="space-y-4 mb-8">
+                <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition-colors">
+                  <input type="radio" name="storeType" value="general" checked={storeType === 'general'} onChange={(e) => setStoreType(e.target.value)} className="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                  <div>
+                    <p className="font-bold text-gray-900">General Store / Supermarket</p>
+                    <p className="text-xs text-gray-500 mt-1">Measures in pieces, kg, boxes, etc.</p>
+                  </div>
+                </label>
+                
+                <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition-colors">
+                  <input type="radio" name="storeType" value="medical" checked={storeType === 'medical'} onChange={(e) => setStoreType(e.target.value)} className="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                  <div>
+                    <p className="font-bold text-gray-900">Pharmacy / Medical Store</p>
+                    <p className="text-xs text-gray-500 mt-1">Measures in strips, tablets, bottles, etc.</p>
+                  </div>
+                </label>
+                
+                <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 transition-colors">
+                  <input type="radio" name="storeType" value="other" checked={storeType === 'other'} onChange={(e) => setStoreType(e.target.value)} className="w-5 h-5 text-indigo-600 border-gray-300 focus:ring-indigo-600" />
+                  <div>
+                    <p className="font-bold text-gray-900">Hardware / Other</p>
+                    <p className="text-xs text-gray-500 mt-1">Custom measurements</p>
+                  </div>
+                </label>
+              </div>
+              
+              <button
+                type="submit"
+                className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm transition-all"
+              >
+                Complete Setup
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

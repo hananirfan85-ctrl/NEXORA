@@ -21,6 +21,7 @@ export type Product = {
   cost_price: number;
   selling_price: number;
   stock: number;
+  unit?: string;
   created_at: string;
 };
 
