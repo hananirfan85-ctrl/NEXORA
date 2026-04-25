@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { AppLayout } from './components/layout/AppLayout';
@@ -118,6 +119,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-right" />
       <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Landing />} />

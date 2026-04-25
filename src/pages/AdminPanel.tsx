@@ -199,7 +199,7 @@ $$ LANGUAGE plpgsql;
         <Users className="shrink-0 mt-0.5" size={20} />
         <div>
           <strong className="block mb-1 text-base">Important Notice Regarding Clients Approvals:</strong>
-          Since you are testing this on your deployed Vercel application (nexorasystem.vercel.app), your clients will <strong>still see the pending approval page</strong> until you actually <strong>push these new code updates to your GitHub repository</strong> so Vercel can rebuild the app with the newly added backend SQL integrations. <br className="my-2" /> Make sure clients refresh their page after the new deployment finishes on Vercel.
+          Since you are testing this on your deployed Vercel application (nexapossystem.vercel.app), your clients will <strong>still see the pending approval page</strong> until you actually <strong>push these new code updates to your GitHub repository</strong> so Vercel can rebuild the app with the newly added backend SQL integrations. <br className="my-2" /> Make sure clients refresh their page after the new deployment finishes on Vercel.
         </div>
       </div>
 

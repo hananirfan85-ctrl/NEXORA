@@ -135,7 +135,7 @@ export default function Landing() {
                   <button className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
                     Features <ChevronDown size={14} />
                   </button>
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden text-sm">
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden text-sm">
                     <Link to="/features/billing" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Fast & Easy Billing</Link>
                     <Link to="/features/inventory" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Real-Time Inventory</Link>
                     <Link to="/features/reports" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Advanced Reports</Link>
@@ -144,8 +144,7 @@ export default function Landing() {
                   </div>
                 </div>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
-                <Link to="/signup" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Sign Up</Link>
-                <Link to="/login" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
+                <Link to="/login" className="text-sm font-sans font-medium text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-lg transition-colors drop-shadow-sm">Login / Register</Link>
               </div>
             </div>
           </div>
@@ -360,13 +359,13 @@ export default function Landing() {
         {/* Final Call to Action */}
         <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center p-12 md:p-20 rounded-[3rem] bg-indigo-900/20 border border-indigo-500/20 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 mix-blend-overlay"></div>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 mix-blend-overlay pointer-events-none"></div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative z-10 w-full pointer-events-auto">
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Manage Your Business Smarter</h2>
               <p className="text-xl text-indigo-200 font-light mb-10 max-w-2xl mx-auto">
                 Start managing your business smarter with NEXA POS System today. Experience fast billing, real-time inventory tracking, and complete business control in one powerful solution.
               </p>
-              <Link to="/signup" className="inline-flex items-center gap-3 bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl text-lg">
+              <Link to="/signup" className="inline-flex items-center gap-3 bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl text-lg relative z-20">
                 Get Started Now <ArrowRight size={20} />
               </Link>
             </motion.div>
@@ -401,10 +400,11 @@ export default function Landing() {
             <div>
               <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Explore</h4>
               <ul className="space-y-4 font-light text-sm">
-                <li><Link to="/features" className="hover:text-indigo-400 transition-colors">Features</Link></li>
+                <li><Link to="/features/billing" className="hover:text-indigo-400 transition-colors">Fast & Easy Billing</Link></li>
+                <li><Link to="/features/inventory" className="hover:text-indigo-400 transition-colors">Real-Time Inventory</Link></li>
+                <li><Link to="/features/reports" className="hover:text-indigo-400 transition-colors">Advanced Reports</Link></li>
+                <li><Link to="/features/crm" className="hover:text-indigo-400 transition-colors">CRM & Ledgers</Link></li>
                 <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
-                <li><Link to="/industries" className="hover:text-indigo-400 transition-colors">Industries</Link></li>
-                <li><Link to="/blog" className="hover:text-indigo-400 transition-colors">Blog</Link></li>
                 <li><Link to="/signup" className="hover:text-indigo-400 transition-colors">Sign Up</Link></li>
               </ul>
             </div>

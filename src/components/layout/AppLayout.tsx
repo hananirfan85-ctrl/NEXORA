@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home, Users, Hexagon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../lib/supabase';
+import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'motion/react';
 
 const navItems = [
@@ -44,6 +46,33 @@ export function AppLayout() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  useEffect(() => {
+    const checkLowStock = async () => {
+      if (!user) return;
+      
+      const { data, error } = await supabase
+        .from('products')
+        .select('name, stock')
+        .lte('stock', 5)
+        .order('stock', { ascending: true });
+        
+      if (!error && data && data.length > 0) {
+        toast.error(`Warning: ${data.length} item(s) are running low on stock!`, {
+          duration: 6000,
+          position: 'top-right',
+          icon: '⚠️'
+        });
+      }
+    };
+    
+    // Check shortly after mounting to allow other things to render
+    const timer = setTimeout(() => {
+      checkLowStock();
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [user]);
 
   const initiateInstall = async () => {
     if (!deferredPrompt) return;

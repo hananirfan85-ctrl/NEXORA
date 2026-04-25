@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { Users, Search, Plus, MailOpen, TrendingUp, Filter, Star, BookOpen, Clock, LogIn, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { formatCurrency } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import toast from 'react-hot-toast';
 import AdminPanel from './AdminPanel';
 
 type Customer = {
@@ -62,24 +63,32 @@ export default function Customers() {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) return;
 
-    if (editingCustomer) {
-      await supabase.from('customers').update({
-        name: newCustomer.name,
-        email: newCustomer.email,
-        phone: newCustomer.phone,
-        address: newCustomer.address
-      }).eq('id', editingCustomer.id);
-    } else {
-      await supabase.from('customers').insert([{
-        user_id: userData.user.id,
-        ...newCustomer
-      }]);
-    }
+    try {
+      if (editingCustomer) {
+        const { error } = await supabase.from('customers').update({
+          name: newCustomer.name,
+          email: newCustomer.email,
+          phone: newCustomer.phone,
+          address: newCustomer.address
+        }).eq('id', editingCustomer.id);
+        if (error) throw error;
+        toast.success("Customer updated");
+      } else {
+        const { error } = await supabase.from('customers').insert([{
+          user_id: userData.user.id,
+          ...newCustomer
+        }]);
+        if (error) throw error;
+        toast.success("Customer added");
+      }
 
-    setShowAddModal(false);
-    setEditingCustomer(null);
-    setNewCustomer({ name: '', email: '', phone: '', address: '' });
-    fetchCustomers();
+      setShowAddModal(false);
+      setEditingCustomer(null);
+      setNewCustomer({ name: '', email: '', phone: '', address: '' });
+      fetchCustomers();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to save customer. Make sure SQL setup is complete in Admin Panel.');
+    }
   };
 
   const handleEditClick = (c: Customer) => {
@@ -90,8 +99,14 @@ export default function Customers() {
 
   const handleDeleteCustomer = async (id: string) => {
     if(!window.confirm('Are you sure you want to delete this customer?')) return;
-    await supabase.from('customers').delete().eq('id', id);
-    fetchCustomers();
+    try {
+      const { error } = await supabase.from('customers').delete().eq('id', id);
+      if (error) throw error;
+      toast.success("Customer deleted");
+      fetchCustomers();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete customer");
+    }
   };
 
   const openLedger = async (customer: Customer) => {
@@ -119,30 +134,37 @@ export default function Customers() {
     
     const entryType = newLedgerEntry.type;
 
-    await supabase.from('customer_ledgers').insert([{
-      customer_id: selectedCustomerForLedger.id,
-      user_id: user.id,
-      amount: amount,
-      type: entryType,
-      description: newLedgerEntry.description
-    }]);
+    try {
+      const { error } = await supabase.from('customer_ledgers').insert([{
+        customer_id: selectedCustomerForLedger.id,
+        user_id: user.id,
+        amount: amount,
+        type: entryType,
+        description: newLedgerEntry.description
+      }]);
+      if (error) throw error;
 
-    // Update customer ledger_balance
-    let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
-    if (entryType === 'charge') {
-       newBalance += amount;
-    } else {
-       newBalance -= amount;
+      // Update customer ledger_balance
+      let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
+      if (entryType === 'charge') {
+         newBalance += amount;
+      } else {
+         newBalance -= amount;
+      }
+
+      const { error: updateError } = await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
+      if (updateError) throw updateError;
+      
+      setNewLedgerEntry({ amount: '', type: 'charge', description: '' });
+      fetchLedger(selectedCustomerForLedger.id);
+      fetchCustomers();
+      
+      // Update local state for immediate feedback
+      setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
+      toast.success("Ledger entry added");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to add ledger entry. Make sure SQL setup is complete.");
     }
-
-    await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
-    
-    setNewLedgerEntry({ amount: '', type: 'charge', description: '' });
-    fetchLedger(selectedCustomerForLedger.id);
-    fetchCustomers();
-    
-    // Update local state for immediate feedback
-    setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
   };
 
   const filteredCustomers = customers.filter(c => {
@@ -400,19 +422,26 @@ export default function Customers() {
                           <button 
                             onClick={async () => {
                               if(!window.confirm('Delete this ledger entry?')) return;
-                              await supabase.from('customer_ledgers').delete().eq('id', entry.id);
-                              
-                              let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
-                              if (entry.type === 'charge') {
-                                newBalance -= entry.amount;
-                              } else {
-                                newBalance += entry.amount;
+                              try {
+                                const { error } = await supabase.from('customer_ledgers').delete().eq('id', entry.id);
+                                if (error) throw error;
+                                
+                                let newBalance = Number(selectedCustomerForLedger.ledger_balance || 0);
+                                if (entry.type === 'charge') {
+                                  newBalance -= entry.amount;
+                                } else {
+                                  newBalance += entry.amount;
+                                }
+                                const { error: updateError } = await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
+                                if (updateError) throw updateError;
+                                
+                                setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
+                                fetchLedger(selectedCustomerForLedger.id);
+                                fetchCustomers();
+                                toast.success("Ledger entry deleted");
+                              } catch (err: any) {
+                                toast.error(err.message || "Failed to delete entry. Make sure SQL setup is complete.");
                               }
-                              await supabase.from('customers').update({ ledger_balance: newBalance }).eq('id', selectedCustomerForLedger.id);
-                              
-                              setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
-                              fetchLedger(selectedCustomerForLedger.id);
-                              fetchCustomers();
                             }}
                             className="text-xs text-red-500 hover:text-red-700 transition"
                           >
