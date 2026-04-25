@@ -87,7 +87,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center p-6">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Account Pending Approval</h2>
         <p className="text-gray-600 max-w-md mb-4 text-justify">
-          You have successfully registered (<strong>{user.email}</strong>). However, access to the NEXORA dashboard requires administrator approval.
+          You have successfully registered (<strong>{user.email}</strong>). However, access to the NEXA POS dashboard requires administrator approval.
         </p>
         <p className="text-gray-500 mb-8 text-sm">
           Please contact support when you verify your purchase, to let the administrator grant your permissions.

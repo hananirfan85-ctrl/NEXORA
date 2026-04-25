@@ -7,13 +7,13 @@ const features = {
   'point-of-sale': {
     title: 'Point of Sale API & Interface',
     subtitle: 'Lightning-fast checkout, built for extreme volume and complete offline reliability.',
-    desc: 'The NEXORA Point of Sale module brings an architectural leap in retail management. We stripped away the bloat of traditional web apps and built a streamlined interface that responds in milliseconds.',
+    desc: 'The NEXA POS Point of Sale module brings an architectural leap in retail management. We stripped away the bloat of traditional web apps and built a streamlined interface that responds in milliseconds.',
     benefits: ['Sub-second transaction parsing', 'Full offline synchronization', 'Customizable receipt templates', 'Multi-payment tender support', 'Barcode scanner integration'],
     sections: [
       {
         icon: Zap,
         title: "Microsecond Latency",
-        content: "Traditional POS systems take 2-3 seconds per scan. NEXORA processes line items locally using IndexedDB, reducing cart operation latency to under 50 milliseconds. Whether you are scanning one item or one hundred, the interface never skips a beat."
+        content: "Traditional POS systems take 2-3 seconds per scan. NEXA POS processes line items locally using IndexedDB, reducing cart operation latency to under 50 milliseconds. Whether you are scanning one item or one hundred, the interface never skips a beat."
       },
       {
         icon: ShieldCheck,
@@ -51,7 +51,7 @@ const features = {
       {
         icon: Zap,
         title: "Supplier Automation",
-        content: "When stock hits the reorder point, NEXORA can automatically draft a purchase order to your preferred supplier. Review, approve, and send in three clicks."
+        content: "When stock hits the reorder point, NEXA POS can automatically draft a purchase order to your preferred supplier. Review, approve, and send in three clicks."
       },
       {
         icon: Rocket,
@@ -74,7 +74,7 @@ const features = {
       {
         icon: Rocket,
         title: "Predictive Engines",
-        content: "NEXORA analyzes historical sales velocity to predict when you will run out of a specific item. Stop reacting to zero-stock events and start forecasting your purchasing needs weeks in advance."
+        content: "NEXA POS analyzes historical sales velocity to predict when you will run out of a specific item. Stop reacting to zero-stock events and start forecasting your purchasing needs weeks in advance."
       },
       {
         icon: ShieldCheck,
@@ -102,7 +102,7 @@ const features = {
       {
         icon: ShieldCheck,
         title: "Conflict Resolution",
-        content: "What happens if a product is sold offline while its price is updated online? NEXORA's sync matrix uses timestamp-based conflict resolution to ensure logical data integrity upon reconnection."
+        content: "What happens if a product is sold offline while its price is updated online? NEXA POS's sync matrix uses timestamp-based conflict resolution to ensure logical data integrity upon reconnection."
       },
       {
         icon: Rocket,
@@ -220,7 +220,7 @@ export default function FeaturePage() {
           <div className="mt-32 pb-16 text-center border-t border-white/10 pt-16">
             <h2 className="text-3xl font-display font-bold mb-8">Ready to upgrade your infrastructure?</h2>
             <Link to="/signup" className="inline-flex justify-center items-center gap-3 rounded-full bg-indigo-600 px-8 py-4 text-sm font-mono tracking-widest font-bold text-white shadow-xl shadow-indigo-600/30 hover:bg-indigo-500 hover:scale-[1.02] transition-all uppercase">
-              Deploy NEXORA Platform
+              Deploy NEXA POS Platform
               <Rocket size={18} />
             </Link>
           </div>

@@ -30,21 +30,21 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">2. How We Use Your Information</h2>
               <p>
-                Your data is used entirely to support the functionality of the NEXORA system. This includes synchronization across devices, executing AI analytics, operating secure login processes, and troubleshooting technical issues. We use this data to improve your inventory control and give you better operational insights.
+                Your data is used entirely to support the functionality of the NEXA POS system. This includes synchronization across devices, executing AI analytics, operating secure login processes, and troubleshooting technical issues. We use this data to improve your inventory control and give you better operational insights.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">3. Data Storage and Security</h2>
               <p>
-                By nature of being an offline-first PWA, much of your data may be stored in your own device's local storage mechanisms (e.g. IndexedDB, LocalStorage). Remote data is protected using industry-standard encryptions on our Supabase-backed instances. However, you are responsible for the physical and software security of the endpoint devices using NEXORA.
+                By nature of being an offline-first PWA, much of your data may be stored in your own device's local storage mechanisms (e.g. IndexedDB, LocalStorage). Remote data is protected using industry-standard encryptions on our Supabase-backed instances. However, you are responsible for the physical and software security of the endpoint devices using NEXA POS.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">4. Analytics and AI Services</h2>
               <p>
-                NEXORA incorporates AI tools to simplify and analyze POS interactions. By using the AI elements of our platform, you acknowledge that certain queries and aggregated data may be processed by trusted third-party Large Language Models (LLMs) used to generate summaries. We do not explicitly sell your customer data to advertisers.
+                NEXA POS incorporates AI tools to simplify and analyze POS interactions. By using the AI elements of our platform, you acknowledge that certain queries and aggregated data may be processed by trusted third-party Large Language Models (LLMs) used to generate summaries. We do not explicitly sell your customer data to advertisers.
               </p>
             </section>
           </div>

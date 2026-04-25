@@ -8,7 +8,7 @@ export default function Documentation() {
     {
       title: "Quick Start",
       icon: <Zap className="w-6 h-6 text-indigo-400" />,
-      content: "NEXORA is designed as an immersive Point of Sale and Inventory Management tool. To begin, register for an account. By default, new accounts are held in a pending state until an owner or Super Admin approves access from the internal settings panel."
+      content: "NEXA POS is designed as an immersive Point of Sale and Inventory Management tool. To begin, register for an account. By default, new accounts are held in a pending state until an owner or Super Admin approves access from the internal settings panel."
     },
     {
       title: "Inventory Matrix",
@@ -23,7 +23,7 @@ export default function Documentation() {
     {
       title: "Admin & Security",
       icon: <Shield className="w-6 h-6 text-indigo-400" />,
-      content: "Only verified administrators can access the Master Dashboard, approve new employee accounts, or view global metrics. NEXORA utilizes 256-bit encryption for all network traffic and leverages strict RLS (Row Level Security) policies."
+      content: "Only verified administrators can access the Master Dashboard, approve new employee accounts, or view global metrics. NEXA POS utilizes 256-bit encryption for all network traffic and leverages strict RLS (Row Level Security) policies."
     }
   ];
 
@@ -52,7 +52,7 @@ export default function Documentation() {
         >
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight mb-4">Platform Documentation</h1>
           <p className="text-xl text-gray-400 font-light max-w-2xl">
-            Everything you need to deploy, manage, and scale the NEXORA immersive management system.
+            Everything you need to deploy, manage, and scale the NEXA POS immersive management system.
           </p>
         </motion.div>
 

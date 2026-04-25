@@ -22,7 +22,7 @@ export default function Login() {
     setError('');
 
     // --- DEBUGGING HELP ---
-    if (email === 'debug@nexora.com') {
+    if (email === 'debug@nexapos.com') {
        const url = import.meta.env.VITE_SUPABASE_URL || 'MISSING';
        const key = import.meta.env.VITE_SUPABASE_ANON_KEY || 'MISSING';
        setError(`DEBUG MODE:\nURL Length: ${url.length}\nURL Starts With: ${url.substring(0, 10)}...\nKey Length: ${key.length}\nKey Starts With: ${key.substring(0, 10)}...`);
@@ -70,36 +70,19 @@ export default function Login() {
   return (
     <div className="relative min-h-screen font-sans selection:bg-indigo-500/30 selection:text-white overflow-hidden flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       
-      {/* Refined, Elegant Tech Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#030305]">
-        {/* Layer 1: Elegant Dark 3D Abstract Image */}
-        <motion.img 
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-          alt="Immersive Studio Background" 
-          className="absolute inset-0 w-[110%] h-[110%] object-cover opacity-40 mix-blend-lighten -left-[5%] -top-[5%]"
-          animate={{ 
-            scale: [1, 1.08, 1],
-            x: ['-2%', '2%', '-2%'],
-            y: ['-2%', '2%', '-2%'],
-            rotate: [0, 1, 0]
-          }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Layer 2: Architectural / Digital Twin Blueprint Grid Overlay */}
+      {/* Modern Refined Animated Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <motion.div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px',
-            backgroundPosition: 'center center'
-          }}
-          animate={{ backgroundPosition: ['0px 0px', '80px 80px'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-gradient-to-br from-[#0a0a0c] via-[#0f111a] to-[#0a0a0c]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         />
-
-        {/* Layer 4: Vignette for text readability across edges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/90"></div>
+        <motion.div 
+          className="absolute w-[60vw] h-[60vw] rounded-full blur-[120px] bg-indigo-600/10 mix-blend-screen"
+          animate={{ x: [-100, 100, -100], y: [-50, 50, -50] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -115,7 +98,7 @@ export default function Login() {
               <Hexagon className="h-12 w-12 text-indigo-500 fill-indigo-500/20 drop-shadow-md" />
             </div>
             <h2 className="text-center text-3xl font-display font-bold text-white tracking-tight">
-              Sign in to NEXORA
+              Sign in to NEXA POS
             </h2>
             <p className="mt-3 text-center text-sm font-sans font-light text-gray-400">
               Or{' '}
@@ -139,7 +122,7 @@ export default function Login() {
                   className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm font-mono"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@nexora.com"
+                  placeholder="admin@nexapos.com"
                 />
               </div>
               <div>

@@ -9,12 +9,12 @@ export default function Settings() {
   const [showSaved, setShowSaved] = useState(false);
 
   useEffect(() => {
-    const savedName = localStorage.getItem('nexora_business_name');
-    const savedAddress = localStorage.getItem('nexora_address');
-    const savedFooter = localStorage.getItem('nexora_footer');
+    const savedName = localStorage.getItem('nexapos_business_name');
+    const savedAddress = localStorage.getItem('nexapos_address');
+    const savedFooter = localStorage.getItem('nexapos_footer');
 
     if (savedName) setBusinessName(savedName);
-    else setBusinessName('NEXORA POS');
+    else setBusinessName('NEXA POS POS');
 
     if (savedAddress) setAddress(savedAddress);
     if (savedFooter) setFooterMessage(savedFooter);
@@ -22,9 +22,9 @@ export default function Settings() {
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('nexora_business_name', businessName);
-    localStorage.setItem('nexora_address', address);
-    localStorage.setItem('nexora_footer', footerMessage);
+    localStorage.setItem('nexapos_business_name', businessName);
+    localStorage.setItem('nexapos_address', address);
+    localStorage.setItem('nexapos_footer', footerMessage);
     
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 3000);

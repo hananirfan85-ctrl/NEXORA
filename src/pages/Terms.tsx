@@ -23,35 +23,35 @@ export default function Terms() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">1. Acceptance of Terms</h2>
               <p>
-                By accessing and using NEXORA, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our software. We reserve the right to update these terms at any time without prior notice.
+                By accessing and using NEXA POS, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our software. We reserve the right to update these terms at any time without prior notice.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">2. Description of Service</h2>
               <p>
-                NEXORA provides a comprehensive Point of Sale (POS) and inventory management system designed to operate both online and offline through Progressive Web App (PWA) technology. The service includes, but is not limited to, inventory tracking, sales processing, customer relationship management, and AI-assisted analytics.
+                NEXA POS provides a comprehensive Point of Sale (POS) and inventory management system designed to operate both online and offline through Progressive Web App (PWA) technology. The service includes, but is not limited to, inventory tracking, sales processing, customer relationship management, and AI-assisted analytics.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">3. User Responsibilities</h2>
               <p>
-                You are responsible for maintaining the confidentiality of your account credentials. You agree that any activities occurring under your account are your sole responsibility. NEXORA cannot be held liable for any data loss or misuse resulting from unauthorized access to your devices or account.
+                You are responsible for maintaining the confidentiality of your account credentials. You agree that any activities occurring under your account are your sole responsibility. NEXA POS cannot be held liable for any data loss or misuse resulting from unauthorized access to your devices or account.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">4. Offline Functionality and Data Storage</h2>
               <p>
-                NEXORA relies on local browser storage for its offline-first capabilities. By using this service, you consent to data being cached locally on your device. It is your responsibility to ensure your device eventually connects to the internet to sync pending transactions with the database. We are not liable for any discrepancies resulting from cleared browser caches before syncing.
+                NEXA POS relies on local browser storage for its offline-first capabilities. By using this service, you consent to data being cached locally on your device. It is your responsibility to ensure your device eventually connects to the internet to sync pending transactions with the database. We are not liable for any discrepancies resulting from cleared browser caches before syncing.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">5. Limitation of Liability</h2>
               <p>
-                NEXORA and its developers shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the service. This includes business interruption, loss of profits, or data corruption.
+                NEXA POS and its developers shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use the service. This includes business interruption, loss of profits, or data corruption.
               </p>
             </section>
           </div>

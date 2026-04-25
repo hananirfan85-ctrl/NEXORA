@@ -186,7 +186,7 @@ export default function Dashboard() {
                 <Store size={32} />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Welcome to NEXORA!</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">Welcome to NEXA POS!</h3>
             <p className="text-gray-500 text-sm text-center mb-6">Let's set up your store. What type of business do you run?</p>
             
             <form onSubmit={saveStoreSetup}>

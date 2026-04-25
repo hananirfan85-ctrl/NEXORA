@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BarChart3, Package, ShoppingCart, Zap, ShieldCheck, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Download, X } from 'lucide-react';
+import { 
+  ArrowRight, BarChart3, Package, ShoppingCart, Zap, ShieldCheck, 
+  Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Download, X,
+  Users, Smartphone, Settings, Building2, Store, PlusCircle, Factory, Shield,
+  ChevronDown, Hexagon
+} from 'lucide-react';
 
 export default function Landing() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
@@ -41,85 +47,92 @@ export default function Landing() {
     visible: { opacity: 1, y: 0 }
   };
 
+  const schemaMarkup = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "NEXA POS System",
+    "operatingSystem": "Any",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "NEXA POS is an advanced Point of Sale system designed to help businesses manage sales, billing, inventory, and customers in one powerful platform."
+  };
+
+  const faqs = [
+    {
+      q: "What is NEXA POS System?",
+      a: "NEXA POS is a modern Point of Sale software solution that simplifies business operations by automating billing, tracking inventory in real-time, and generating detailed sales reports."
+    },
+    {
+      q: "Can I use the POS system without internet?",
+      a: "Yes! NEXA POS uses offline-first architecture, allowing you to manage billing and inventory offline. All data will automatically sync securely to the cloud once an internet connection is re-established."
+    },
+    {
+      q: "Does this POS software work for supermarkets and pharmacies?",
+      a: "Absolutely. During setup, you can define standard units (e.g., strips, kg, boxes, liters) so NEXA POS fully adapts to retail shops, supermarkets, restaurants, and medical stores."
+    },
+    {
+      q: "Is it a cloud-based system?",
+      a: "Yes, NEXA POS is a hybrid system. It offers cloud-based data backup for supreme security while retaining lightning-fast local performance."
+    }
+  ];
+
   return (
-    <div className="relative min-h-screen font-sans selection:bg-indigo-500/30 selection:text-white overflow-hidden">
+    <div className="relative min-h-screen font-sans selection:bg-indigo-500/30 selection:text-white overflow-hidden bg-[#0a0a0c]">
       
-      {/* Refined, Elegant Tech Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#030305]">
-        {/* Layer 1: Elegant Dark 3D Abstract Image */}
-        <motion.img 
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
-          alt="Immersive Studio Background" 
-          className="absolute inset-0 w-[110%] h-[110%] object-cover opacity-40 mix-blend-lighten -left-[5%] -top-[5%]"
-          animate={{ 
-            scale: [1, 1.08, 1],
-            x: ['-2%', '2%', '-2%'],
-            y: ['-2%', '2%', '-2%'],
-            rotate: [0, 1, 0]
-          }}
-          transition={{ 
-            duration: 30, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
-          }}
-        />
+      {/* Schema Markup for SEO */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }} />
 
-        {/* Layer 2: Architectural / Digital Twin Blueprint Grid Overlay */}
+      {/* Modern Refined Animated Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <motion.div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px',
-            backgroundPosition: 'center center'
-          }}
-          animate={{ backgroundPosition: ['0px 0px', '80px 80px'] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-gradient-to-br from-[#0a0a0c] via-[#0f111a] to-[#0a0a0c]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         />
-
-        {/* Layer 4: Vignette for text readability across edges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/90"></div>
+        <motion.div 
+          className="absolute w-[60vw] h-[60vw] rounded-full blur-[120px] bg-indigo-600/10 mix-blend-screen"
+          animate={{ x: [-100, 100, -100], y: [-50, 50, -50] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute right-0 top-0 w-[40vw] h-[40vw] rounded-full blur-[100px] bg-sky-500/10 mix-blend-screen"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        />
       </div>
 
-      {/* Main Content (Must be positioned above the video z-10) */}
+      {/* Main Content */}
       <div className="relative z-10">
         
-        {/* Navigation - Glassmorphic */}
+        {/* Navigation */}
         <motion.nav 
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="fixed top-0 w-full bg-black/20 backdrop-blur-md border-b border-white/10 z-50 transition-all"
+          className="fixed top-0 w-full bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-white/5 z-50 transition-all"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-20 items-center">
               <div className="flex items-center gap-3 text-white font-display font-bold text-2xl tracking-widest uppercase">
-                <img src="/logo.png" alt="NEXORA" className="h-9 w-auto object-contain drop-shadow-md" onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIxIi8+PGNpcmNsZSBjeD0iMTkiIGN5PSIyMSIgcj0iMSIvPjxwYXRoIGQ9Ik0yLjA1IDIuMDVoMmwzLjQzIDYuNThMMTAgMTRoOWwtLjI0LS43Ii8+PHBhdGggZD0iTTkgMTRoLjUiLz48cGF0aCBkPSJNOSAxNGwtLjI0LS43bC0zLjQzLTYuNTgiLz48L3N2Zz4=';
-                }} />
-                <span className="drop-shadow-md">NEXORA</span>
+                <Hexagon className="h-8 w-8 text-indigo-500" />
+                <span className="drop-shadow-md">NEXA POS</span>
               </div>
               <div className="flex items-center gap-6">
                 <button 
                   onClick={handleDownloadClick}
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 border border-indigo-500/50 rounded-lg text-sm font-sans font-medium text-white transition-all shadow-lg shadow-indigo-600/30"
+                  className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-sans font-bold text-white transition-all shadow-lg shadow-indigo-600/20"
                 >
                   <Download size={16} />
-                  Install App
+                  Install POS software
                 </button>
-                <div className="relative group">
-                  <button className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
-                    Features <svg className="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                  </button>
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-50">
-                    <Link to="/features/point-of-sale" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Point of Sale</Link>
-                    <Link to="/features/inventory-matrix" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Inventory Matrix</Link>
-                    <Link to="/features/real-time-analytics" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Real-time Analytics</Link>
-                    <Link to="/features/offline-sync" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Offline Sync</Link>
-                  </div>
-                </div>
-                <Link to="/about" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">About</Link>
-                <Link to="/pricing" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
-                <Link to="/login" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
+                <Link to="/about" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">About</Link>
+                <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
+                <Link to="/login" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
               </div>
             </div>
           </div>
@@ -128,209 +141,286 @@ export default function Landing() {
         {/* Hero Section */}
         <section className="pt-40 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen flex items-center justify-center">
           <div className="text-center max-w-4xl mx-auto">
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.span variants={itemVariants} className="inline-block py-2 px-5 rounded-full bg-white/10 backdrop-blur-md text-indigo-200 text-xs font-mono font-bold tracking-widest uppercase mb-8 border border-white/20 shadow-lg">
-                The Immersive Management Experience
+            <motion.div variants={containerVariants} initial="hidden" animate="visible">
+              <motion.span variants={itemVariants} className="inline-block py-2 px-5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-mono font-bold tracking-widest uppercase mb-8">
+                Everything your business needs at the point of sale.
               </motion.span>
-              <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-display font-extrabold text-white tracking-tight leading-tight mb-8 drop-shadow-2xl">
-                Manage. Track. <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 drop-shadow-lg">Grow.</span>
+              <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-sans font-extrabold text-white tracking-tight leading-tight mb-8 drop-shadow-2xl">
+                NEXA POS System <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Smart, Fast & Reliable</span>
               </motion.h1>
-              <motion.p variants={itemVariants} className="text-xl md:text-2xl font-sans text-gray-200 mb-12 leading-relaxed font-light drop-shadow-md max-w-3xl mx-auto">
-                Step into the future. Nexora is the ultimate intelligent POS and inventory management ecosystem designed for speed, clarity, and total control.
+              <motion.p variants={itemVariants} className="text-xl md:text-2xl font-sans text-gray-300 mb-12 leading-relaxed font-light drop-shadow-md max-w-3xl mx-auto">
+                NEXA POS is an advanced Point of Sale (POS) system designed to help businesses manage sales, billing, inventory, and customers in one powerful platform.
               </motion.p>
               <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <Link to="/login" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-indigo-600 text-white px-8 py-4 rounded-full font-mono font-bold hover:bg-indigo-500 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(99,102,241,0.8)] transition-all shadow-xl active:scale-95 text-sm tracking-widest uppercase">
-                  Get Started
+                <Link to="/login" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-indigo-600 text-white px-8 py-4 rounded-xl font-sans font-bold hover:bg-indigo-500 hover:-translate-y-1 transition-all shadow-xl shadow-indigo-600/30 text-base">
+                  Get Started Now
                   <ArrowRight size={20} />
+                </Link>
+                <Link to="/login" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white/5 text-white px-8 py-4 rounded-xl border border-white/10 font-sans font-bold hover:bg-white/10 hover:-translate-y-1 transition-all text-base">
+                  Request a Free Demo
                 </Link>
               </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* Features Grid - Glassmorphic */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 border-t border-white/10 bg-black/30 backdrop-blur-sm">
+        {/* What is NEXA POS? */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 bg-white/5 backdrop-blur-md border-t border-b border-white/5">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">What is NEXA POS System?</h2>
+              <p className="text-lg text-gray-300 font-light leading-relaxed">
+                NEXA POS is a modern POS software solution that simplifies business operations by automating billing, tracking inventory in real-time, and generating detailed sales reports. It replaces traditional manual systems with a fast, secure, and digital solution optimized for modern commerce.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Key Features Grid */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-7xl mx-auto">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
-              className="text-center mb-20"
+              className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-lg tracking-tight">Next-Generation Tools</h2>
-              <p className="text-xl font-sans text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">Built for the modern edge. Uncompromising performance paired with an unmatched aesthetic.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Key Features of NEXA POS System</h2>
+              <p className="text-gray-400 font-light max-w-2xl mx-auto">Discover why our retail POS system is trusted by thousands of businesses globally.</p>
             </motion.div>
 
-            <motion.div 
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: ShoppingCart, title: 'Lightning Fast POS', desc: 'Process sales instantly with a beautifully optimized checkout interface.' },
-                { icon: Package, title: 'Inventory Matrix', desc: 'Real-time stock levels and automated low-inventory alerts powered by data.' },
-                { icon: BarChart3, title: 'Deep Analytics', desc: 'Interactive dashboards tracking daily profits and detailed financial breakdowns.' },
-                { icon: Zap, title: 'Offline Resilience', desc: 'Keep selling even when your internet drops out. Data syncs automatically.' },
-                { icon: ShieldCheck, title: 'High-Fidelity Security', desc: 'Your business data is safely stored on reliable cloud infrastructure.' }
+                { icon: Zap, title: 'Fast & Easy Billing', desc: 'Process sales instantly with an optimized checkout.' },
+                { icon: Package, title: 'Real-Time Inventory', desc: 'Manage stock across multiple locations efficiently.' },
+                { icon: BarChart3, title: 'Advanced Reports', desc: 'Detailed sales reports and analytics.' },
+                { icon: Users, title: 'Multi-User Access', desc: 'Role-based access controls for your team.' },
+                { icon: Smartphone, title: 'Barcode Scanning', desc: 'Support for hardware or device-bound scanners.' },
+                { icon: Zap, title: 'Cloud Data Backup', desc: 'Secure cloud backups ensure your data is safe.' },
+                { icon: Shield, title: 'Secure & Reliable', desc: 'End-to-end encryption for maximum protection.' },
+                { icon: Store, title: 'CRM & Ledgers', desc: 'Manage customer debts and loyalty seamlessly.' }
               ].map((feature, i) => (
-                <motion.div key={i} variants={itemVariants} className="p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 group shadow-2xl">
-                  <div className="w-14 h-14 bg-indigo-500/20 text-indigo-300 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-indigo-500/30 transition-transform duration-300 border border-indigo-500/20">
-                    <feature.icon size={28} />
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  key={i} 
+                  className="p-6 rounded-2xl bg-[#11131a] border border-white/5 hover:bg-[#1a1d26] hover:border-white/10 transition-colors"
+                >
+                  <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center mb-5">
+                    <feature.icon size={24} />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3 tracking-wide">{feature.title}</h3>
-                  <p className="text-gray-300 font-sans font-light leading-relaxed">{feature.desc}</p>
+                  <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>
+                  <p className="text-gray-400 text-sm font-light leading-relaxed">{feature.desc}</p>
                 </motion.div>
               ))}
-            </motion.div>
-          </div>
-        </section>
-        
-        {/* Analytics / Metrics Section - Glassmorphic */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 bg-black/40 backdrop-blur-md border-t border-white/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 drop-shadow-lg tracking-tight">Data-Driven Intelligence</h2>
-                <p className="text-xl font-sans text-gray-300 mb-8 font-light leading-relaxed">
-                  Decisions shouldn't be guesswork. Nexora aggregates every interaction, sale, and restock across your enterprise directly into actionable insights.
-                </p>
-                <ul className="space-y-6">
-                  {['Real-time sync across all terminals', 'Predictive inventory depletion alerts', 'Multi-location role-based access control'].map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-4 text-gray-200">
-                      <div className="mt-1 bg-indigo-500/20 p-1.5 rounded-full border border-indigo-500/30">
-                        <ArrowRight size={16} className="text-indigo-400" />
-                      </div>
-                      <span className="font-sans font-light text-lg">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="grid grid-cols-2 gap-6"
-              >
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl flex flex-col justify-center items-center text-center">
-                  <div className="font-mono text-5xl font-bold text-white mb-2 tracking-tighter">99.9%</div>
-                  <div className="text-sm font-sans text-indigo-300 font-semibold uppercase tracking-widest">Uptime</div>
-                </div>
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl flex flex-col justify-center items-center text-center mt-12">
-                  <div className="font-mono text-5xl font-bold text-white mb-2 tracking-tighter">&lt;50ms</div>
-                  <div className="text-sm font-sans text-indigo-300 font-semibold uppercase tracking-widest">Latency</div>
-                </div>
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl flex flex-col justify-center items-center text-center">
-                  <div className="font-mono text-5xl font-bold text-white mb-2 tracking-tighter">256-bit</div>
-                  <div className="text-sm font-sans text-indigo-300 font-semibold uppercase tracking-widest">Encryption</div>
-                </div>
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl flex flex-col justify-center items-center text-center mt-12">
-                  <div className="font-mono text-5xl font-bold text-white mb-2 tracking-tighter">24/7</div>
-                  <div className="text-sm font-sans text-indigo-300 font-semibold uppercase tracking-widest">Support</div>
-                </div>
-              </motion.div>
             </div>
           </div>
         </section>
 
+        {/* Benefits & Industries Grid */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 bg-gradient-to-b from-black/20 to-black/60 border-t border-white/5">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+            
+            {/* Benefits */}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-3xl font-bold text-white mb-8">Benefits of Using NEXA POS</h2>
+              <ul className="space-y-4">
+                {[
+                  'Increase business efficiency and speed',
+                  'Reduce human errors in billing',
+                  'Improve customer experience with fast checkouts',
+                  'Track inventory automatically with precision',
+                  'Make better business decisions with sales software reports',
+                  'Save massive amounts of time and operational cost'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-gray-300">
+                    <div className="p-1 rounded-full bg-teal-500/20 text-teal-400">
+                      <ShieldCheck size={16} />
+                    </div>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Industries We Serve */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-3xl font-bold text-white mb-8">Industries We Serve</h2>
+              <p className="text-gray-400 mb-6 font-light">NEXA POS system is perfectly tailored for various business management verticals:</p>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { icon: ShoppingCart, text: 'Retail Shops' },
+                  { icon: Building2, text: 'Supermarkets' },
+                  { icon: Factory, text: 'Wholesale Businesses' },
+                  { icon: Shield, text: 'Pharmacies' },
+                  { icon: BarChart3, text: 'Restaurants & Cafes' },
+                  { icon: Building2, text: 'Small & Medium Enterprises' }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                    <div className="text-indigo-400"><item.icon size={20} /></div>
+                    <span className="text-sm font-medium text-white">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Why Choose NEXA */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10 text-center border-t border-b border-white/5 bg-[#0a0a0c]">
+          <div className="max-w-4xl mx-auto">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold text-white mb-6"
+            >
+              Why Choose NEXA POS Over Others?
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-lg text-gray-300 font-light leading-relaxed"
+            >
+              Unlike traditional POS systems, NEXA POS offers a modern, lightweight, and scalable business management software solution that grows with your business. It is designed for speed, accuracy, and ease of use, making it ideal for both small shops and large enterprises. Skip the manual systems and embrace top-tier billing software today.
+            </motion.p>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+              <p className="text-gray-400">Everything you need to know about the product and software architecture.</p>
+            </div>
+
+            <div className="space-y-4">
+              {faqs.map((faq, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+                  <button 
+                    onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                    className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors"
+                  >
+                    <span className="font-bold text-white">{faq.q}</span>
+                    <ChevronDown size={20} className={`text-gray-400 transition-transform ${activeFaq === i ? 'rotate-180' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {activeFaq === i && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="px-6 pb-6 text-gray-400 font-light leading-relaxed"
+                      >
+                        {faq.a}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final Call to Action */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-5xl mx-auto text-center p-12 md:p-20 rounded-[3rem] bg-indigo-900/20 border border-indigo-500/20 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 mix-blend-overlay"></div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Manage Your Business Smarter</h2>
+              <p className="text-xl text-indigo-200 font-light mb-10 max-w-2xl mx-auto">
+                Start managing your business smarter with NEXA POS System today. Experience fast billing, real-time inventory tracking, and complete business control in one powerful solution.
+              </p>
+              <Link to="/login" className="inline-flex items-center gap-3 bg-white text-indigo-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 hover:scale-105 transition-all shadow-xl text-lg">
+                Get Started Now <ArrowRight size={20} />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Footer */}
-        <motion.footer 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="bg-black/80 text-gray-300 py-16 px-4 border-t border-white/10 backdrop-blur-xl relative z-10"
-        >
+        <footer className="bg-[#050507] text-gray-300 py-16 px-4 border-t border-white/5 relative z-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
             
-            {/* Brand Column */}
             <div className="lg:col-span-2">
-              <div className="flex items-center gap-3 font-display font-bold text-2xl mb-6 text-white tracking-widest uppercase">
-                <img src="/logo.png" alt="NEXORA" className="h-8 w-auto object-contain drop-shadow-md" />
-                <span className="drop-shadow-md">NEXORA</span>
+              <div className="flex items-center gap-3 font-bold text-2xl mb-6 text-white tracking-widest uppercase">
+                <Hexagon className="h-8 w-8 text-indigo-500" />
+                <span>NEXA POS</span>
               </div>
-              <p className="text-gray-400 font-sans font-light leading-relaxed mb-8 max-w-sm">
-                Nexora is the premier immersive management studio, crafting high-performance, real-time POS and inventory solutions that redefine retail architecture.
+              <p className="text-gray-400 font-light leading-relaxed mb-8 max-w-sm">
+                NEXA POS is the ultimate point of sale system, crafting high-performance, real-time POS and inventory solutions that redefine retail architecture globally.
               </p>
               <div className="flex items-center gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 hover:text-white transition-all">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Twitter size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 hover:text-white transition-all">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Linkedin size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-500 hover:text-white transition-all">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Instagram size={18} />
                 </a>
               </div>
             </div>
 
             <div>
-              <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Company</h4>
-              <ul className="space-y-4 font-sans font-light text-sm">
-                <li><Link to="/about" className="hover:text-indigo-400 transition-colors">About Nexora</Link></li>
-                <li><Link to="/docs" className="hover:text-indigo-400 transition-colors">Documentation</Link></li>
+              <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Explore</h4>
+              <ul className="space-y-4 font-light text-sm">
+                <li><Link to="/features" className="hover:text-indigo-400 transition-colors">Features</Link></li>
+                <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
+                <li><Link to="/industries" className="hover:text-indigo-400 transition-colors">Industries</Link></li>
+                <li><Link to="/blog" className="hover:text-indigo-400 transition-colors">Blog</Link></li>
               </ul>
             </div>
             
-            {/* Platform Links */}
-            <div>
-              <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Platform</h4>
-              <ul className="space-y-4 font-sans font-light text-sm">
-                <li><Link to="/docs" className="hover:text-indigo-400 transition-colors">Documentation</Link></li>
-                <li><Link to="/features/point-of-sale" className="hover:text-indigo-400 transition-colors">Point of Sale</Link></li>
-                <li><Link to="/features/inventory-matrix" className="hover:text-indigo-400 transition-colors">Inventory Matrix</Link></li>
-                <li><Link to="/features/real-time-analytics" className="hover:text-indigo-400 transition-colors">Real-time Analytics</Link></li>
-                <li><Link to="/features/offline-sync" className="hover:text-indigo-400 transition-colors">Offline Sync</Link></li>
-                <li><Link to="/login" className="hover:text-indigo-400 transition-colors">Admin Portal</Link></li>
-              </ul>
-            </div>
-
-            {/* Contact */}
             <div>
               <h4 className="text-indigo-400 font-mono text-xs tracking-widest uppercase font-bold mb-6">Contact</h4>
-              <ul className="space-y-4 font-sans font-light text-sm">
+              <ul className="space-y-4 font-light text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin size={16} className="shrink-0 mt-0.5 text-indigo-400" />
-                  <span>South Seas Centre, Tower 2, 75 Mody Road, Tsim Sha Tsui East, HK</span>
+                  <span>South Seas Centre, HK</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail size={16} className="shrink-0 text-indigo-400" />
                   <a href="mailto:hananirfan85@gmail.com" className="hover:text-indigo-400 transition-colors">hananirfan85@gmail.com</a>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Phone size={16} className="shrink-0 text-indigo-400" />
-                  <a href="tel:+85212345678" className="hover:text-indigo-400 transition-colors">+852 1234 5678</a>
-                </li>
               </ul>
             </div>
           </div>
           
-          <div className="max-w-7xl mx-auto border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans font-light text-gray-500">
-            <p>© {new Date().getFullYear()} Nexora Global Design Studio. All rights reserved.</p>
+          <div className="max-w-7xl mx-auto border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-light text-gray-500">
+            <p>© {new Date().getFullYear()} NEXA POS System. All rights reserved.</p>
             <div className="flex gap-6">
               <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-              <a href="#" className="hover:text-white transition-colors">Cookie Settings</a>
+              <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
           </div>
-        </motion.footer>
+        </footer>
       </div>
 
-      {/* Manual Install Modal */}
       <AnimatePresence>
         {showInstallModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -341,29 +431,26 @@ export default function Landing() {
               className="bg-[#111111] border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
             >
               <div className="p-6 border-b border-white/10 flex items-center justify-between shrink-0">
-                <h3 className="text-xl font-bold text-white">Install NEXORA App</h3>
-                <button 
-                  onClick={() => setShowInstallModal(false)}
-                  className="p-2 text-gray-400 hover:text-white rounded-full transition-colors"
-                >
+                <h3 className="text-xl font-bold text-white">Install NEXA POS App</h3>
+                <button onClick={() => setShowInstallModal(false)} className="p-2 text-gray-400 hover:text-white rounded-full transition-colors">
                   <X size={20} />
                 </button>
               </div>
               
               <div className="p-6 text-sm text-gray-400 space-y-4">
-                <p>NEXORA is a Progressive Web App (PWA). You can install it directly to your device for offline use without going through an app store.</p>
+                <p>NEXA POS is a Progressive Web App (PWA). You can install it directly to your device for offline use without going through an app store.</p>
                 <div className="bg-white/5 p-4 rounded-lg">
                   <strong className="text-white block mb-2">On iOS (Safari):</strong>
                   <ol className="list-decimal pl-5 space-y-1">
-                    <li>Tap the <strong>Share</strong> button at the bottom of the screen.</li>
-                    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+                    <li>Tap the <strong>Share</strong> button.</li>
+                    <li>Tap <strong>Add to Home Screen</strong>.</li>
                   </ol>
                 </div>
                 <div className="bg-white/5 p-4 rounded-lg">
                   <strong className="text-white block mb-2">On Desktop (Chrome/Edge):</strong>
                   <ol className="list-decimal pl-5 space-y-1">
-                    <li>Click the <strong>Install</strong> icon on the right side of the URL/address bar.</li>
-                    <li>Or click the 3-dots menu and select <strong>Install NEXORA</strong>.</li>
+                    <li>Click the <strong>Install</strong> icon in the address bar.</li>
+                    <li>Or click the 3-dots menu and select <strong>Install NEXA POS</strong>.</li>
                   </ol>
                 </div>
               </div>

@@ -18,10 +18,10 @@ export default function About() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6">
-            About NEXORA
+            About NEXA POS
           </h1>
           <p className="text-xl md:text-2xl font-sans font-light text-gray-400 mb-12 leading-relaxed">
-            NEXORA is a next-generation Point of Sale (POS), CRM, and Inventory Management system designed for speed, simplicity, and extreme scalability. Built with a focus on immersive aesthetics and offline-first capabilities.
+            NEXA POS is a next-generation Point of Sale (POS), CRM, and Inventory Management system designed for speed, simplicity, and extreme scalability. Built with a focus on immersive aesthetics and offline-first capabilities.
           </p>
           
           <div className="w-full h-px border-t border-white/10 mb-12" />
@@ -35,7 +35,7 @@ export default function About() {
                 <div>
                   <h3 className="text-3xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-300 mb-4">Hanan Irfan</h3>
                   <p className="text-gray-300 font-light text-base mb-8">
-                    Founder & Lead Architect at NEXORA. Passionate about bringing world-class, enterprise-grade tools to businesses of all sizes through elegant code and intuitive design.
+                    Founder & Lead Architect at NEXA POS. Passionate about bringing world-class, enterprise-grade tools to businesses of all sizes through elegant code and intuitive design.
                   </p>
                   
                   <ul className="space-y-4 mb-8">
@@ -110,11 +110,11 @@ export default function About() {
             <div className="grid md:grid-cols-2 gap-8 font-light text-gray-300">
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Design First</h4>
-                <p>Ugly software slows people down. NEXORA prioritizes a polished, high-contrast, dark-mode-first aesthetic that reduces eye strain and increases focus during high-volume retail hours.</p>
+                <p>Ugly software slows people down. NEXA POS prioritizes a polished, high-contrast, dark-mode-first aesthetic that reduces eye strain and increases focus during high-volume retail hours.</p>
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Anywhere, Offline & Online</h4>
-                <p>NEXORA works seamlessly through cutting-edge PWA technology. Whether your internet goes down or you're on a blazing fast connection, you keep selling. Once you're back online, everything syncs flawlessly and securely.</p>
+                <p>NEXA POS works seamlessly through cutting-edge PWA technology. Whether your internet goes down or you're on a blazing fast connection, you keep selling. Once you're back online, everything syncs flawlessly and securely.</p>
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Enterprise Feature Set</h4>
@@ -122,7 +122,7 @@ export default function About() {
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Install Anywhere</h4>
-                <p>No app store required. You can install NEXORA directly on iOS, Android, or Desktop directly from your browser, making rollouts across your retail business instantaneous.</p>
+                <p>No app store required. You can install NEXA POS directly on iOS, Android, or Desktop directly from your browser, making rollouts across your retail business instantaneous.</p>
               </div>
             </div>
           </div>

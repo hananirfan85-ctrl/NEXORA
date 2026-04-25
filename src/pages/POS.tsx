@@ -125,9 +125,9 @@ export default function POS() {
   const handlePrint = () => {
     if (!completedSale) return;
 
-    const bName = localStorage.getItem('nexora_business_name') || 'NEXORA POS';
-    const address = localStorage.getItem('nexora_address') || 'Nexus Supermarket\n123 Street';
-    const footer = localStorage.getItem('nexora_footer') || 'Thank you for shopping with us!';
+    const bName = localStorage.getItem('nexapos_business_name') || 'NEXA POS POS';
+    const address = localStorage.getItem('nexapos_address') || 'Nexus Supermarket\n123 Street';
+    const footer = localStorage.getItem('nexapos_footer') || 'Thank you for shopping with us!';
 
     const printContent = `
       <html>
