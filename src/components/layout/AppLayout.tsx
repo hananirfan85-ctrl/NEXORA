@@ -58,11 +58,23 @@ export function AppLayout() {
         .order('stock', { ascending: true });
         
       if (!error && data && data.length > 0) {
-        toast.error(`Warning: ${data.length} item(s) are running low on stock!`, {
-          duration: 6000,
-          position: 'top-right',
-          icon: '⚠️'
-        });
+        const itemNames = data.map(i => i.name).join(', ');
+        toast.error(
+          <div>
+            <strong>Low Stock Alert ({data.length})</strong>
+            <p className="text-sm mt-1 text-gray-800">{itemNames}</p>
+          </div>, 
+          {
+            duration: 8000,
+            position: 'top-right',
+            icon: '⚠️',
+            style: {
+              background: '#FEF2F2',
+              border: '1px solid #F87171',
+              color: '#991B1B'
+            }
+          }
+        );
       }
     };
     
@@ -92,7 +104,7 @@ export function AppLayout() {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900 font-sans overflow-hidden">
+    <div className="flex h-screen bg-gradient-to-br from-indigo-50/50 via-white to-[#f5f5fa] text-gray-900 font-sans overflow-hidden">
       
       {/* Mobile Overlay */}
       <AnimatePresence>

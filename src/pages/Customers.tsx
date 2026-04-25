@@ -87,7 +87,11 @@ export default function Customers() {
       setNewCustomer({ name: '', email: '', phone: '', address: '' });
       fetchCustomers();
     } catch (err: any) {
-      toast.error(err.message || 'Failed to save customer. Make sure SQL setup is complete in Admin Panel.');
+      if (err.message?.includes('Could not find the table') || err.message?.includes('relation "public.customers" does not exist')) {
+        toast.error('Table missing! Please go to Admin Panel and run the provided SQL queries in Supabase.', { duration: 6000 });
+      } else {
+        toast.error(err.message || 'Failed to save customer. Make sure SQL setup is complete in Admin Panel.');
+      }
     }
   };
 
