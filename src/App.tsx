@@ -36,25 +36,43 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
          return;
       }
       
+      let pollInterval: any;
       const checkRole = async () => {
-        const { data } = await supabase.from('user_roles').select('role').eq('user_id', user.id).single();
+        // First try the RPC in case RLS is blocking the table
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_my_role');
+        if (!rpcError && rpcData) {
+           setRoleStatus(rpcData);
+           if (rpcData !== 'pending') clearInterval(pollInterval);
+           return;
+        }
+
+        const { data, error } = await supabase.from('user_roles').select('role').eq('user_id', user.id).single();
+        if (error) {
+           console.error("Error fetching user role:", error);
+        }
+
         if (data) {
           setRoleStatus(data.role);
+          if (data.role !== 'pending') clearInterval(pollInterval);
         } else {
-          setRoleStatus('pending'); // default to pending if not fully set up
+          setRoleStatus('pending');
         }
       };
       
       checkRole();
+      // Poll every 5 seconds while pending, as realtime isn't enabled by default in Supabase
+      pollInterval = setInterval(checkRole, 5000);
 
       const subscription = supabase
         .channel('public:user_roles')
         .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'user_roles', filter: `user_id=eq.${user.id}` }, (payload) => {
           setRoleStatus(payload.new.role);
+          if (payload.new.role !== 'pending') clearInterval(pollInterval);
         })
         .subscribe();
 
       return () => {
+        clearInterval(pollInterval);
         supabase.removeChannel(subscription);
       };
     }

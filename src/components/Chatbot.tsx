@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user' | 'model' | 'system'; content: string }[]>([
-    { role: 'model', content: 'Hello! I am the Nexora AI Assistant. How can I help you today?' }
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant' | 'system'; content: string }[]>([
+    { role: 'assistant', content: 'Hello! I am the Nexora AI Assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,35 +27,38 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      // Build conversation history for Gemini API
-      // We skip system instructions from the history array, and instead provide it in the config
-      const historyContents = messages
-        .filter(m => m.role !== 'system')
-        .map(m => ({
-          role: m.role,
-          parts: [{ text: m.content }]
-        }));
-      
-      // Append the new user message
-      historyContents.push({
-        role: 'user',
-        parts: [{ text: userMessage }]
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer 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",
+          "HTTP-Referer": window.location.origin,
+          "X-OpenRouter-Title": "NEXORA App",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant for NEXORA, an advanced POS and Inventory Management system. The founder is Hanan Irfan, an 18-year-old student in 4th semester BSCS at KFUEIT University. The co-founder is Ahmad Ali, also a 20-year-old student in 4th semester BSCS at KFUEIT. We focus on offline-first, scalable, fast solutions. Keep answers concise.'
+            },
+            ...messages.filter(m => m.role !== 'system'),
+            { role: 'user', content: userMessage }
+          ],
+        })
       });
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: historyContents,
-        config: {
-          systemInstruction: 'You are a helpful assistant for NEXORA, an advanced POS and Inventory Management system. The founder is Hanan Irfan, an 18-year-old student in 4th semester BSCS at KFUEIT University. The co-founder is Ahmad Ali, also a 20-year-old student in 4th semester BSCS at KFUEIT. We focus on offline-first, scalable, fast solutions. Keep answers concise.'
-        }
-      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      const responseContent = response.text || "I couldn't process that.";
+      const data = await response.json();
+      const responseContent = data?.choices?.[0]?.message?.content || "I couldn't process that.";
       
-      setMessages(prev => [...prev, { role: 'model', content: responseContent }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: responseContent }]);
     } catch (error) {
        console.error("Chatbot Error:", error);
-       setMessages(prev => [...prev, { role: 'model', content: 'Sorry, I encountered an error connecting to the AI.' }]);
+       setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error connecting to the AI.' }]);
     } finally {
       setIsLoading(false);
     }

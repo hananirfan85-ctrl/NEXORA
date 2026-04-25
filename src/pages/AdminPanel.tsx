@@ -111,6 +111,18 @@ BEGIN
   ON CONFLICT (user_id) DO UPDATE SET role = EXCLUDED.role;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_my_role()
+RETURNS text
+SECURITY DEFINER
+AS $$
+DECLARE
+  my_role text;
+BEGIN
+  SELECT role INTO my_role FROM public.user_roles WHERE user_id = auth.uid();
+  RETURN COALESCE(my_role, 'pending');
+END;
+$$ LANGUAGE plpgsql;
   `.trim();
 
   return (

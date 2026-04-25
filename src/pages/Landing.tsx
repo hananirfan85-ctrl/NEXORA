@@ -106,6 +106,17 @@ export default function Landing() {
                   <Download size={16} />
                   Install App
                 </button>
+                <div className="relative group">
+                  <button className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
+                    Features <svg className="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2 z-50">
+                    <Link to="/features/point-of-sale" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Point of Sale</Link>
+                    <Link to="/features/inventory-matrix" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Inventory Matrix</Link>
+                    <Link to="/features/real-time-analytics" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Real-time Analytics</Link>
+                    <Link to="/features/offline-sync" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors">Offline Sync</Link>
+                  </div>
+                </div>
                 <Link to="/about" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">About</Link>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
                 <Link to="/login" className="text-sm font-sans font-medium text-gray-200 hover:text-white transition-colors drop-shadow-sm">Sign in</Link>
