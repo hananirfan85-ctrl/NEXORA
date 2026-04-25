@@ -22,8 +22,6 @@ import About from './pages/About';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 
-import Chatbot from './components/Chatbot';
-
 // Protected Route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, signOut } = useAuth();
@@ -121,7 +119,6 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Chatbot />
         <Routes>
           <Route path="/home" element={<Landing />} />
           <Route path="/login" element={<Login />} />
