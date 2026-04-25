@@ -7,6 +7,12 @@ import './index.css';
 import { registerSW } from 'virtual:pwa-register';
 registerSW({ immediate: true });
 
+// Auto-reload the page if a new deployment removed old JS chunks
+window.addEventListener('vite:preloadError', (event) => {
+  console.log('Detected outdated assets, reloading the page...');
+  window.location.reload();
+});
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
