@@ -12,23 +12,24 @@ type AuthUser = {
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<AuthUser[]>([]);
-  const [tickets, setTickets] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'clients' | 'tickets'>('clients');
+  const [messages, setMessages] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'clients' | 'messages'>('clients');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [needsSetup, setNeedsSetup] = useState(false);
   const [editingRoleFor, setEditingRoleFor] = useState<string | null>(null);
   const [newRoleStr, setNewRoleStr] = useState<string>('');
+  const [replyText, setReplyText] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (activeTab === 'clients') {
       fetchUsers();
     } else {
-      fetchTickets();
+      fetchMessages();
     }
   }, [activeTab]);
 
-  const fetchTickets = async () => {
+  const fetchMessages = async () => {
     setLoading(true);
     const { data, error } = await supabase.from('user_messages').select('*').order('created_at', { ascending: false });
     if (error) {
@@ -38,7 +39,7 @@ export default function AdminPanel() {
          setError(error.message);
       }
     } else {
-      setTickets(data || []);
+      setMessages(data || []);
       setNeedsSetup(false);
     }
     setLoading(false);
@@ -388,10 +389,10 @@ $$ LANGUAGE plpgsql;
             <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
               <h2 className="font-bold text-gray-900 flex items-center gap-2">
                 <Users size={18} className="text-indigo-600" />
-                User Messages ({tickets.length})
+                User Messages ({messages.length})
               </h2>
               <button
-                onClick={fetchTickets}
+                onClick={fetchMessages}
                 className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
               >
                 Refresh
@@ -402,11 +403,11 @@ $$ LANGUAGE plpgsql;
               <div className="p-8 text-center text-gray-500">Loading messages...</div>
             ) : error ? (
               <div className="p-8 text-center text-red-500 bg-red-50">{error}</div>
-            ) : tickets.length === 0 ? (
+            ) : messages.length === 0 ? (
               <div className="p-8 text-center text-gray-500">No user messages found.</div>
             ) : (
               <div className="divide-y divide-gray-100">
-                {tickets.map(t => (
+                {messages.map(t => (
                   <div key={t.id} className="p-6 hover:bg-gray-50 transition-colors">
                     <div className="flex justify-between items-start mb-2">
                        <div>
@@ -417,27 +418,51 @@ $$ LANGUAGE plpgsql;
                     </div>
                     {t.subject && <div className="font-medium text-gray-800 mt-2">Subject: {t.subject}</div>}
                     <p className="text-gray-700 mt-2 whitespace-pre-wrap rounded-lg bg-gray-100 p-4 border border-gray-200">{t.message}</p>
-                    <div className="mt-4 flex gap-4">
-                      <a 
-                        href={`mailto:${t.email}?subject=Reply to your Support Ticket on NEXA POS&body=Hi,%0A%0ARegarding your message:%0A"${t.message}"%0A%0AAdmin Reply:%0A`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-sm bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
-                      >
-                        Reply via Email
-                      </a>
-                      {t.status === 'pending' && (
-                        <button 
-                          onClick={async () => {
-                             await supabase.from('user_messages').update({ status: 'replied' }).eq('id', t.id);
-                             fetchTickets();
-                          }}
-                          className="text-sm bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
-                        >
-                          Mark as Replied
-                        </button>
-                      )}
-                    </div>
+                    
+                    {t.reply ? (
+                      <div className="mt-4 bg-indigo-50 border border-indigo-100 p-4 rounded-lg">
+                        <strong className="text-indigo-800 text-sm block mb-1">Admin Reply:</strong>
+                        <p className="text-indigo-900 text-sm whitespace-pre-wrap">{t.reply}</p>
+                      </div>
+                    ) : (
+                      t.status === 'pending' && (
+                        <div className="mt-4">
+                          <textarea
+                            className="w-full text-sm p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all resize-none"
+                            rows={3}
+                            placeholder="Type your reply here to save it in system..."
+                            value={replyText[t.id] || ''}
+                            onChange={(e) => setReplyText({ ...replyText, [t.id]: e.target.value })}
+                          />
+                          <div className="mt-3 flex gap-3">
+                            <button
+                               onClick={async () => {
+                                 const reply = replyText[t.id] || '';
+                                 const mailtoLink = `mailto:${t.email}?subject=Reply to your message on NEXA POS&body=Hi,%0A%0ARegarding your message:%0A"${t.message}"%0A%0AAdmin Reply:%0A${encodeURIComponent(reply)}`;
+                                 
+                                 // Update DB with reply and status
+                                 await supabase.from('user_messages').update({ status: 'replied', reply }).eq('id', t.id);
+                                 
+                                 fetchMessages();
+                                 window.open(mailtoLink, '_blank');
+                               }}
+                               className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-indigo-700 transition-colors"
+                            >
+                               Save Reply & Email Target User
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                 await supabase.from('user_messages').update({ status: 'replied', reply: 'Marked as read/closed without reply.' }).eq('id', t.id);
+                                 fetchMessages();
+                              }}
+                              className="text-sm bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                            >
+                              Mark Read (No Reply)
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    )}
                   </div>
                 ))}
               </div>
