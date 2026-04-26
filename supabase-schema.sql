@@ -125,6 +125,17 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 5. User Roles and Customers (CRM)
+CREATE TABLE IF NOT EXISTS public.user_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID,
+  email TEXT NOT NULL,
+  subject TEXT,
+  message TEXT NOT NULL,
+  reply TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS public.user_roles (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
@@ -145,11 +156,14 @@ CREATE TABLE IF NOT EXISTS public.customers (
 );
 
 -- Enable RLS for new tables
+ALTER TABLE public.user_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 
 -- 6. Super Admin & Basic RLS for new tables
 DO $$ BEGIN
+  DROP POLICY IF EXISTS "Anyone can insert" ON public.user_messages;
+  DROP POLICY IF EXISTS "Admins can manage" ON public.user_messages;
   DROP POLICY IF EXISTS "Users can read own role" ON public.user_roles;
   DROP POLICY IF EXISTS "Superadmin manages all roles" ON public.user_roles;
   DROP POLICY IF EXISTS "Users can manage own customers" ON public.customers;
@@ -161,6 +175,10 @@ DO $$ BEGIN
   DROP POLICY IF EXISTS "Superadmin manages all sale_items" ON public.sale_items;
   DROP POLICY IF EXISTS "Superadmin manages all activity logs" ON public.activity_logs;
 END $$;
+
+-- User messages policies
+CREATE POLICY "Anyone can insert" ON public.user_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admins can manage" ON public.user_messages FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
 
 -- Role policies
 CREATE POLICY "Users can read own role" ON public.user_roles FOR SELECT USING (auth.uid() = user_id);
