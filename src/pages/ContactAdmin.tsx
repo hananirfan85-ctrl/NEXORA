@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
-import { Send, Mail, CheckCircle, MessageSquare } from 'lucide-react';
+import { Send, Mail, CheckCircle, MessageSquare, Clock, Filter } from 'lucide-react';
+import { format } from 'date-fns';
 
 export default function ContactAdmin() {
   const { user } = useAuth();
@@ -11,6 +12,32 @@ export default function ContactAdmin() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      fetchMessages();
+    }
+  }, [user]);
+
+  const fetchMessages = async () => {
+    setLoadingMessages(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_messages')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setMessages(data || []);
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +66,7 @@ export default function ContactAdmin() {
         setSubject('');
         setMessage('');
         setSuccess(true);
+        fetchMessages();
         setTimeout(() => setSuccess(false), 3000);
       }
     } catch (err: any) {
@@ -141,6 +169,56 @@ export default function ContactAdmin() {
             </div>
           </div>
           
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+      >
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <Clock size={20} className="text-indigo-600" />
+            Message History
+          </h2>
+        </div>
+        
+        <div className="divide-y divide-gray-100 max-h-[500px] overflow-y-auto">
+          {loadingMessages ? (
+            <div className="p-8 text-center text-gray-500">Loading messages...</div>
+          ) : messages.length === 0 ? (
+            <div className="p-12 text-center text-gray-400">
+              <MessageSquare size={32} className="mx-auto mb-3 opacity-20" />
+              <p>No messages sent yet.</p>
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <div key={msg.id} className="p-6 hover:bg-gray-50/50 transition-colors">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide mr-3 ${
+                      msg.status === 'replied' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {msg.status}
+                    </span>
+                    <span className="font-medium text-gray-900">{msg.subject}</span>
+                  </div>
+                  <span className="text-sm text-gray-500">{format(new Date(msg.created_at), 'MMM d, yyyy h:mm a')}</span>
+                </div>
+                
+                <p className="text-gray-600 text-sm whitespace-pre-wrap mb-4 bg-white p-4 rounded-lg border border-gray-100 shadow-sm">{msg.message}</p>
+                
+                {msg.reply && (
+                  <div className="ml-6 pl-4 border-l-2 border-indigo-200 mt-2 bg-indigo-50/30 p-4 rounded-r-lg">
+                    <strong className="text-indigo-800 text-xs uppercase tracking-wider block mb-2">Admin Reply</strong>
+                    <p className="text-gray-800 text-sm whitespace-pre-wrap">{msg.reply}</p>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </motion.div>
     </div>

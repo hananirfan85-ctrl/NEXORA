@@ -142,16 +142,16 @@ const Download: React.FC = () => {
               <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">
                 <HelpCircle size={24} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">4. Troubleshooting</h2>
+              <h2 className="text-2xl font-bold text-gray-900">4. Usage Instructions</h2>
             </div>
             <ul className="space-y-4 text-gray-600">
               <li className="flex items-start gap-3">
-                 <strong className="block text-gray-900">Antivirus Warnings:</strong>
-                 <span className="text-sm">Some strict enterprise antivirus software may falsely flag the installer. Add NEXA POS to your exclusions list.</span>
+                 <strong className="block text-gray-900">Getting Started:</strong>
+                 <span className="text-sm">Once logged in, head to the POS Billing menu to start charting sales. You can use a barcode scanner or manual search.</span>
               </li>
               <li className="flex items-start gap-3">
-                 <strong className="block text-gray-900">Blank Screen on Startup:</strong>
-                 <span className="text-sm">Ensure your internet connection is active during the *first* launch so the hardware can authenticate to the cloud.</span>
+                 <strong className="block text-gray-900">Offline Mode:</strong>
+                 <span className="text-sm">If you lose internet connection, you can keep working. Sales will sync automatically when your connectivity is restored.</span>
               </li>
             </ul>
           </div>
