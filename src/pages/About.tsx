@@ -82,7 +82,7 @@ export default function About() {
                       <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
                         <User size={18} className="text-blue-400" />
                       </div>
-                      <div className="font-mono text-sm uppercase tracking-widest">20 Years Old</div>
+                      <div className="font-mono text-sm uppercase tracking-widest">19 Years Old</div>
                     </li>
                     <li className="flex items-center gap-4 text-gray-200">
                       <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
