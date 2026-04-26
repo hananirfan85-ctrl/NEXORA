@@ -15,8 +15,8 @@ export default defineConfig(({mode}) => {
         includeAssets: ['pwa-192x192.svg', 'pwa-512x512.svg'],
         manifest: {
           name: 'NEXORA',
-          short_name: 'NEXORA',
-          description: 'NEXORA - A complete POS and Shop Management System',
+          short_name: 'NEXA POs',
+          description: 'NEXA POS - A complete POS and ERP System',
           theme_color: '#4f46e5',
           background_color: '#ffffff',
           display: 'standalone',
