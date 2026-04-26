@@ -21,19 +21,23 @@ export default defineConfig(({mode}) => {
           background_color: '#ffffff',
           display: 'standalone',
           icons: [
-            {
-              src: 'pwa-192x192.svg',
-              sizes: '192x192',
-              type: 'image/svg+xml',
-              purpose: 'any maskable'
-            },
-            {
-              src: 'pwa-512x512.svg',
-              sizes: '512x512',
-              type: 'image/svg+xml',
-              purpose: 'any maskable'
-            }
-          ]
+  {
+    src: '/logo.png',
+    sizes: '192x192',
+    type: 'image/png'
+  },
+  {
+    src: '/logo.png',
+    sizes: '512x512',
+    type: 'image/png'
+  },
+  {
+    src: '/logo.png',
+    sizes: '512x512',
+    type: 'image/png',
+    purpose: 'any maskable'
+  }
+]
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
