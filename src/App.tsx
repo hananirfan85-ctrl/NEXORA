@@ -23,7 +23,6 @@ import About from './pages/About';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import ContactAdmin from './pages/ContactAdmin';
-import Download from './pages/Download';
 
 // Protected Route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -131,7 +130,6 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/download" element={<Download />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/features/:featureId" element={<FeaturePage />} />
           

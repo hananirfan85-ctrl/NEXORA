@@ -142,7 +142,6 @@ export default function Landing() {
                   </div>
                 </div>
                 <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Pricing</Link>
-                <Link to="/download" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Download</Link>
               </div>
 
               {/* Desktop CTA */}
@@ -183,7 +182,6 @@ export default function Landing() {
                 <Link to="/features/users" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Multi-User Access</Link>
               </div>
               <Link to="/pricing" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
-              <Link to="/download" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Download Desktop App</Link>
               <div className="pt-4 border-t border-white/10">
                 <Link to="/signup" className="flex justify-center w-full text-base font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-lg transition-all" onClick={() => setIsMobileMenuOpen(false)}>
                   Get Started for Free
@@ -445,7 +443,6 @@ export default function Landing() {
                 <li><Link to="/features/billing" className="hover:text-indigo-400 transition-colors">Fast & Easy Billing</Link></li>
                 <li><Link to="/features/inventory" className="hover:text-indigo-400 transition-colors">Real-Time Inventory</Link></li>
                 <li><Link to="/support" className="hover:text-indigo-400 transition-colors">Help & Support</Link></li>
-                <li><Link to="/download" className="hover:text-indigo-400 transition-colors">Download App</Link></li>
                 <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
                 <li><Link to="/signup" className="hover:text-indigo-400 transition-colors">Sign Up</Link></li>
               </ul>

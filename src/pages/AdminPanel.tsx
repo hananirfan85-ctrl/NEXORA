@@ -119,7 +119,8 @@ CREATE TABLE IF NOT EXISTS public.user_messages (
 );
 ALTER TABLE public.user_messages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can insert" ON public.user_messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admins can manage" ON public.user_messages FOR ALL USING (auth.uid() IN (SELECT id FROM admins));
+CREATE POLICY "Users can read own messages" ON public.user_messages FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Admins can manage" ON public.user_messages FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
 
 CREATE TABLE IF NOT EXISTS public.customers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -438,22 +439,27 @@ $$ LANGUAGE plpgsql;
                             <button
                                onClick={async () => {
                                  const reply = replyText[t.id] || '';
-                                 const mailtoLink = `mailto:${t.email}?subject=Reply to your message on NEXA POS&body=Hi,%0A%0ARegarding your message:%0A"${t.message}"%0A%0AAdmin Reply:%0A${encodeURIComponent(reply)}`;
                                  
                                  // Update DB with reply and status
-                                 await supabase.from('user_messages').update({ status: 'replied', reply }).eq('id', t.id);
-                                 
-                                 fetchMessages();
-                                 window.open(mailtoLink, '_blank');
+                                 const { error } = await supabase.from('user_messages').update({ status: 'replied', reply }).eq('id', t.id);
+                                 if (error) {
+                                   alert('Error saving reply: ' + error.message);
+                                 } else {
+                                   fetchMessages();
+                                 }
                                }}
                                className="text-sm bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-indigo-700 transition-colors"
                             >
-                               Save Reply & Email Target User
+                               Save Reply
                             </button>
                             <button 
                               onClick={async () => {
-                                 await supabase.from('user_messages').update({ status: 'replied', reply: 'Marked as read/closed without reply.' }).eq('id', t.id);
-                                 fetchMessages();
+                                 const { error } = await supabase.from('user_messages').update({ status: 'replied', reply: 'Marked as read/closed without reply.' }).eq('id', t.id);
+                                 if (error) {
+                                   alert('Error marking as read: ' + error.message);
+                                 } else {
+                                   fetchMessages();
+                                 }
                               }}
                               className="text-sm bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
                             >

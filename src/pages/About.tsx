@@ -157,7 +157,7 @@ export default function About() {
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Install Anywhere</h4>
-                <p>Download our cross-platform Electron executable from our website and launch it on any Desktop environment for an instantaneous, app-like experience.</p>
+                <p>Install via your browser to launch it right from your dock or home screen, offering an instantaneous, app-like experience backed by Service Workers.</p>
               </div>
             </div>
           </div>

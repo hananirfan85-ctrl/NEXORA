@@ -178,6 +178,7 @@ END $$;
 
 -- User messages policies
 CREATE POLICY "Anyone can insert" ON public.user_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can read own messages" ON public.user_messages FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Admins can manage" ON public.user_messages FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
 
 -- Role policies
