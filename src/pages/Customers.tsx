@@ -354,9 +354,14 @@ export default function Customers() {
                     {formatCurrency(Math.abs(Number(selectedCustomerForLedger.ledger_balance) || 0))}
                   </div>
                 </div>
-                <button onClick={() => setSelectedCustomerForLedger(null)} className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg">
-                  <Plus className="rotate-45" size={20} />
-                </button>
+                <div className="flex gap-2">
+                  <button onClick={() => window.print()} className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg" title="Print Ledger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                  </button>
+                  <button onClick={() => setSelectedCustomerForLedger(null)} className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg">
+                    <Plus className="rotate-45" size={20} />
+                  </button>
+                </div>
               </div>
 
               <div className="p-4 border-b border-gray-100 shrink-0 bg-white">

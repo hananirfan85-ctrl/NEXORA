@@ -12,6 +12,8 @@ type AuthUser = {
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<AuthUser[]>([]);
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'clients' | 'tickets'>('clients');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [needsSetup, setNeedsSetup] = useState(false);
@@ -19,8 +21,28 @@ export default function AdminPanel() {
   const [newRoleStr, setNewRoleStr] = useState<string>('');
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (activeTab === 'clients') {
+      fetchUsers();
+    } else {
+      fetchTickets();
+    }
+  }, [activeTab]);
+
+  const fetchTickets = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from('user_messages').select('*').order('created_at', { ascending: false });
+    if (error) {
+      if (error.message.includes('relation "public.user_messages" does not exist')) {
+         setNeedsSetup(true);
+      } else {
+         setError(error.message);
+      }
+    } else {
+      setTickets(data || []);
+      setNeedsSetup(false);
+    }
+    setLoading(false);
+  };
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -84,6 +106,20 @@ SELECT id, email, 'pending' FROM auth.users
 ON CONFLICT (user_id) DO NOTHING;
 
 -- === CRM AND LEDGER SETUP ===
+CREATE TABLE IF NOT EXISTS public.user_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID,
+  email TEXT NOT NULL,
+  subject TEXT,
+  message TEXT NOT NULL,
+  reply TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+ALTER TABLE public.user_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can insert" ON public.user_messages FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admins can manage" ON public.user_messages FOR ALL USING (auth.uid() IN (SELECT id FROM admins));
+
 CREATE TABLE IF NOT EXISTS public.customers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -186,22 +222,39 @@ $$ LANGUAGE plpgsql;
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Clients Management (Super Admin)
+            Super Admin Dashboard
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Manage platform clients, verify purchases, and grant roles.</p>
+          <p className="text-gray-500 text-sm mt-1">Manage platform clients, support tickets, and system health.</p>
+        </div>
+        
+        <div className="flex bg-gray-100 p-1 rounded-lg">
+          <button 
+            onClick={() => setActiveTab('clients')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'clients' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            Clients
+          </button>
+          <button 
+            onClick={() => setActiveTab('tickets')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'tickets' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            User Messages
+          </button>
         </div>
       </div>
       
-      <div className="bg-indigo-50 border border-indigo-200 text-indigo-800 p-4 rounded-xl flex gap-3 text-sm">
-        <Users className="shrink-0 mt-0.5" size={20} />
-        <div>
-          <strong className="block mb-1 text-base">Important Notice Regarding Clients Approvals:</strong>
-          Since you are testing this on your deployed Vercel application (nexapossystem.vercel.app), your clients will <strong>still see the pending approval page</strong> until you actually <strong>push these new code updates to your GitHub repository</strong> so Vercel can rebuild the app with the newly added backend SQL integrations. <br className="my-2" /> Make sure clients refresh their page after the new deployment finishes on Vercel.
+      {activeTab === 'clients' && (
+        <div className="bg-indigo-50 border border-indigo-200 text-indigo-800 p-4 rounded-xl flex gap-3 text-sm">
+          <Users className="shrink-0 mt-0.5" size={20} />
+          <div>
+            <strong className="block mb-1 text-base">Important Notice Regarding Clients Approvals:</strong>
+            Since you are testing this on your deployed Vercel application (nexapossystem.vercel.app), your clients will <strong>still see the pending approval page</strong> until you actually <strong>push these new code updates to your GitHub repository</strong> so Vercel can rebuild the app with the newly added backend SQL integrations. <br className="my-2" /> Make sure clients refresh their page after the new deployment finishes on Vercel.
+          </div>
         </div>
-      </div>
+      )}
 
       {needsSetup ? (
         <div className="bg-white rounded-xl shadow-sm border border-orange-200 overflow-hidden">
@@ -242,95 +295,155 @@ $$ LANGUAGE plpgsql;
             </div>
           </div>
         </div>
-      ) : (
+      ) : activeTab === 'clients' ? (
         <div className="bg-white border border-gray-100 shadow-sm rounded-xl overflow-hidden">
           <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-bold text-gray-900 flex items-center gap-2">
-              <Users size={18} className="text-indigo-600" />
-              Registered Clients ({users.length})
-            </h2>
-            <button
-              onClick={fetchUsers}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
-            >
-              Refresh
-            </button>
-          </div>
-          
-          {loading ? (
-            <div className="p-8 text-center text-gray-500">Loading users...</div>
-          ) : error ? (
-            <div className="p-8 text-center text-red-500 bg-red-50">{error}</div>
-          ) : users.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">No users found.</div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
-                    <th className="p-4 font-medium">Email Address</th>
-                    <th className="p-4 font-medium">User ID</th>
-                    <th className="p-4 font-medium">Joined At</th>
-                    <th className="p-4 font-medium">Role Status</th>
-                    <th className="p-4 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {users.map((u) => (
-                    <tr key={u.id} className="hover:bg-indigo-50/30 transition-colors">
-                      <td className="p-4">
-                        <div className="font-medium text-gray-900">{u.email}</div>
-                      </td>
-                      <td className="p-4 text-xs font-mono text-gray-500">
-                        ...{u.id.substring(u.id.length - 8)}
-                      </td>
-                      <td className="p-4 text-sm text-gray-600">
-                        {format(new Date(u.created_at), 'MMM d, yyyy h:mm a')}
-                      </td>
-                      <td className="p-4">
-                        {u.email === 'hananirfan85@gmail.com' ? (
-                          <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-md uppercase tracking-wide">Super Admin</span>
-                        ) : editingRoleFor === u.id ? (
-                          <div className="flex items-center gap-2">
-                             <select
-                               className="text-sm border border-gray-300 rounded-md py-1 px-2 outline-none"
-                               value={newRoleStr}
-                               onChange={(e) => setNewRoleStr(e.target.value)}
-                             >
-                               <option value="pending">Pending</option>
-                               <option value="client">Client (Approved)</option>
-                             </select>
-                             <button onClick={() => handleUpdateRole(u.id, u.email)} className="p-1 bg-green-100 text-green-700 rounded hover:bg-green-200">
-                               <Check size={16} />
-                             </button>
-                             <button onClick={() => setEditingRoleFor(null)} className="p-1 bg-red-100 text-red-700 rounded hover:bg-red-200">
-                               <X size={16} />
-                             </button>
-                          </div>
-                        ) : (
-                          <span className={`px-2 py-1 text-xs font-bold rounded-md uppercase tracking-wide ${u.role === 'client' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                            {u.role}
-                          </span>
-                        )}
-                      </td>
-                      <td className="p-4 text-right">
-                        {u.email !== 'hananirfan85@gmail.com' && editingRoleFor !== u.id && (
-                           <button 
-                             onClick={() => { setEditingRoleFor(u.id); setNewRoleStr(u.role); }}
-                             className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 justify-end w-full"
-                           >
-                             <Edit2 size={14} /> Edit Role
-                           </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <h2 className="font-bold text-gray-900 flex items-center gap-2">
+                <Users size={18} className="text-indigo-600" />
+                Registered Clients ({users.length})
+              </h2>
+              <button
+                onClick={fetchUsers}
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+              >
+                Refresh
+              </button>
             </div>
-          )}
-        </div>
-      )}
+            
+            {loading ? (
+              <div className="p-8 text-center text-gray-500">Loading users...</div>
+            ) : error ? (
+              <div className="p-8 text-center text-red-500 bg-red-50">{error}</div>
+            ) : users.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">No users found.</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
+                      <th className="p-4 font-medium">Email Address</th>
+                      <th className="p-4 font-medium">User ID</th>
+                      <th className="p-4 font-medium">Joined At</th>
+                      <th className="p-4 font-medium">Role Status</th>
+                      <th className="p-4 font-medium text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {users.map((u) => (
+                      <tr key={u.id} className="hover:bg-indigo-50/30 transition-colors">
+                        <td className="p-4">
+                          <div className="font-medium text-gray-900">{u.email}</div>
+                        </td>
+                        <td className="p-4 text-xs font-mono text-gray-500">
+                          ...{u.id.substring(u.id.length - 8)}
+                        </td>
+                        <td className="p-4 text-sm text-gray-600">
+                          {format(new Date(u.created_at), 'MMM d, yyyy h:mm a')}
+                        </td>
+                        <td className="p-4">
+                          {u.email === 'hananirfan85@gmail.com' ? (
+                            <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-md uppercase tracking-wide">Super Admin</span>
+                          ) : editingRoleFor === u.id ? (
+                            <div className="flex items-center gap-2">
+                               <select
+                                 className="text-sm border border-gray-300 rounded-md py-1 px-2 outline-none"
+                                 value={newRoleStr}
+                                 onChange={(e) => setNewRoleStr(e.target.value)}
+                               >
+                                 <option value="pending">Pending</option>
+                                 <option value="client">Client (Approved)</option>
+                               </select>
+                               <button onClick={() => handleUpdateRole(u.id, u.email)} className="p-1 bg-green-100 text-green-700 rounded hover:bg-green-200">
+                                 <Check size={16} />
+                               </button>
+                               <button onClick={() => setEditingRoleFor(null)} className="p-1 bg-red-100 text-red-700 rounded hover:bg-red-200">
+                                 <X size={16} />
+                               </button>
+                            </div>
+                          ) : (
+                            <span className={`px-2 py-1 text-xs font-bold rounded-md uppercase tracking-wide ${u.role === 'client' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                              {u.role}
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          {u.email !== 'hananirfan85@gmail.com' && editingRoleFor !== u.id && (
+                             <button 
+                               onClick={() => { setEditingRoleFor(u.id); setNewRoleStr(u.role); }}
+                               className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 justify-end w-full"
+                             >
+                               <Edit2 size={14} /> Edit Role
+                             </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white border border-gray-100 shadow-sm rounded-xl overflow-hidden">
+            <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="font-bold text-gray-900 flex items-center gap-2">
+                <Users size={18} className="text-indigo-600" />
+                User Messages ({tickets.length})
+              </h2>
+              <button
+                onClick={fetchTickets}
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+              >
+                Refresh
+              </button>
+            </div>
+            
+            {loading ? (
+              <div className="p-8 text-center text-gray-500">Loading messages...</div>
+            ) : error ? (
+              <div className="p-8 text-center text-red-500 bg-red-50">{error}</div>
+            ) : tickets.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">No user messages found.</div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {tickets.map(t => (
+                  <div key={t.id} className="p-6 hover:bg-gray-50 transition-colors">
+                    <div className="flex justify-between items-start mb-2">
+                       <div>
+                         <span className={`px-2 py-1 text-xs font-bold rounded-md uppercase tracking-wide mr-2 ${t.status === 'pending' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>{t.status}</span>
+                         <span className="font-medium text-gray-900">{t.email}</span>
+                       </div>
+                       <span className="text-sm text-gray-500">{format(new Date(t.created_at), 'MMM d, yyyy h:mm a')}</span>
+                    </div>
+                    {t.subject && <div className="font-medium text-gray-800 mt-2">Subject: {t.subject}</div>}
+                    <p className="text-gray-700 mt-2 whitespace-pre-wrap rounded-lg bg-gray-100 p-4 border border-gray-200">{t.message}</p>
+                    <div className="mt-4 flex gap-4">
+                      <a 
+                        href={`mailto:${t.email}?subject=Reply to your Support Ticket on NEXA POS&body=Hi,%0A%0ARegarding your message:%0A"${t.message}"%0A%0AAdmin Reply:%0A`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
+                      >
+                        Reply via Email
+                      </a>
+                      {t.status === 'pending' && (
+                        <button 
+                          onClick={async () => {
+                             await supabase.from('user_messages').update({ status: 'replied' }).eq('id', t.id);
+                             fetchTickets();
+                          }}
+                          className="text-sm bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+                        >
+                          Mark as Replied
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
     </div>
   );
 }

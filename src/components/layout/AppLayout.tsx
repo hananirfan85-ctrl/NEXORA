@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home, Users, Hexagon } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, DollarSign, BarChart3, Clock, LogOut, Search, Menu, X, Download, WifiOff, Settings, Home, Users, Hexagon, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
@@ -15,6 +15,7 @@ const navItems = [
   { name: 'Reports', path: '/reports', icon: BarChart3 },
   { name: 'Records', path: '/records', icon: Clock },
   { name: 'Settings', path: '/settings', icon: Settings },
+  { name: 'Contact Admin', path: '/contact-admin', icon: MessageSquare }
 ];
 
 export function AppLayout() {
@@ -123,8 +124,7 @@ export function AppLayout() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 shrink-0">
           <div className="flex items-center gap-2 text-indigo-600 font-bold text-xl tracking-tight">
-            <Hexagon className="h-8 w-8 text-indigo-600" />
-            <span>NEXA POS</span>
+            <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
           </div>
           <button onClick={closeMobileMenu} className="p-1 text-gray-500 hover:text-gray-700 md:hidden">
             <X size={20} />
@@ -198,14 +198,17 @@ export function AppLayout() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden h-full relative">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 shrink-0 z-30">
-          <div className="flex items-center gap-4">
+        <header className="h-[auto] min-h-16 py-2 bg-white border-b border-gray-200 flex flex-wrap sm:flex-nowrap items-center justify-between px-4 sm:px-6 shrink-0 z-30 gap-2 sm:gap-4">
+          <div className="flex items-center gap-4 shrink-0">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
               className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg md:hidden"
             >
               <Menu size={24} />
             </button>
+            <div className="text-indigo-600 font-bold tracking-tight md:hidden flex items-center gap-2 mr-2">
+              <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto" />
+            </div>
             <div className="relative w-full max-w-sm hidden sm:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input
@@ -216,9 +219,9 @@ export function AppLayout() {
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 sm:flex-none justify-end overflow-x-auto no-scrollbar shrink-0">
             {isOffline && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wider shrink-0">
                 <WifiOff size={14} />
                 <span className="hidden sm:inline">Offline Mode</span>
               </div>
@@ -227,7 +230,7 @@ export function AppLayout() {
             {deferredPrompt && (
               <button 
                 onClick={initiateInstall}
-                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200"
+                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200 shrink-0"
               >
                 <Download size={16} />
                 <span className="hidden sm:inline">Install App</span>
@@ -237,16 +240,11 @@ export function AppLayout() {
 
             <button 
               onClick={() => navigate('/home')}
-              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-sm font-semibold transition-colors shadow-sm"
+              className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg text-sm font-semibold transition-colors shadow-sm shrink-0"
             >
               <Home size={16} />
-              <span className="hidden sm:inline">Back to Home</span>
+              <span className="hidden sm:inline">Back</span>
             </button>
-
-            <div className="text-indigo-600 font-bold tracking-tight md:hidden flex items-center gap-2 ml-2">
-              <Hexagon className="h-6 w-6 text-indigo-600" />
-              <span className="hidden xs:inline">NEXA POS</span>
-            </div>
           </div>
         </header>
 

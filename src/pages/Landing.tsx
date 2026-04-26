@@ -5,7 +5,7 @@ import {
   ArrowRight, BarChart3, Package, ShoppingCart, Zap, ShieldCheck, 
   Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Download, X,
   Users, Smartphone, Settings, Building2, Store, PlusCircle, Factory, Shield,
-  ChevronDown, Hexagon
+  ChevronDown, Hexagon, Menu
 } from 'lucide-react';
 
 export default function Landing() {
@@ -13,7 +13,10 @@ export default function Landing() {
   const [showInstallModal, setShowInstallModal] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   useEffect(() => {
+    // ...existing...
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -118,21 +121,16 @@ export default function Landing() {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-20 items-center">
-              <div className="flex items-center gap-3 text-white font-display font-bold text-2xl tracking-widest uppercase">
-                <Hexagon className="h-8 w-8 text-indigo-500" />
-                <span className="drop-shadow-md">NEXA POS</span>
+              {/* Logo */}
+              <div className="flex items-center gap-3 text-white font-display font-bold text-2xl tracking-widest uppercase shrink-0">
+                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
               </div>
-              <div className="flex items-center gap-6">
-                <button 
-                  onClick={handleDownloadClick}
-                  className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-sans font-bold text-white transition-all shadow-lg shadow-indigo-600/20"
-                >
-                  <Download size={16} />
-                  Install POS software
-                </button>
-                <Link to="/about" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">About</Link>
+              
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center gap-8">
+                <Link to="/about" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">About</Link>
                 <div className="relative group">
-                  <button className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
+                  <button className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors flex items-center gap-1">
                     Features <ChevronDown size={14} />
                   </button>
                   <div className="absolute top-full right-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden text-sm">
@@ -143,11 +141,56 @@ export default function Landing() {
                     <Link to="/features/users" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Multi-User Access</Link>
                   </div>
                 </div>
-                <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors drop-shadow-sm">Pricing</Link>
-                <Link to="/login" className="text-sm font-sans font-medium text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-lg transition-colors drop-shadow-sm">Login / Register</Link>
+                <Link to="/pricing" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Pricing</Link>
+                <Link to="/download" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Download</Link>
+              </div>
+
+              {/* Desktop CTA */}
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/login" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Sign In</Link>
+                <Link to="/signup" className="text-sm font-sans font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-indigo-600/20">
+                  Get Started
+                </Link>
+              </div>
+
+              {/* Mobile Menu Toggle */}
+              <div className="md:hidden flex items-center gap-4">
+                <Link to="/login" className="text-sm font-medium text-indigo-400">Login</Link>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="text-gray-300 hover:text-white p-2"
+                >
+                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
               </div>
             </div>
           </div>
+
+          {/* Mobile Nav Dropdown */}
+          {isMobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="md:hidden bg-[#0c0c0e] border-b border-white/10 px-4 pt-2 pb-6 space-y-4"
+            >
+              <Link to="/about" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+              <div className="block text-base font-medium text-gray-500">Features</div>
+              <div className="pl-4 border-l border-white/10 space-y-3">
+                <Link to="/features/billing" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Fast & Easy Billing</Link>
+                <Link to="/features/inventory" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Real-Time Inventory</Link>
+                <Link to="/features/reports" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Advanced Reports</Link>
+                <Link to="/features/crm" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>CRM & Ledgers</Link>
+                <Link to="/features/users" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Multi-User Access</Link>
+              </div>
+              <Link to="/pricing" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
+              <Link to="/download" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Download Desktop App</Link>
+              <div className="pt-4 border-t border-white/10">
+                <Link to="/signup" className="flex justify-center w-full text-base font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-3 rounded-lg transition-all" onClick={() => setIsMobileMenuOpen(false)}>
+                  Get Started for Free
+                </Link>
+              </div>
+            </motion.div>
+          )}
         </motion.nav>
 
         {/* Hero Section */}
@@ -378,20 +421,19 @@ export default function Landing() {
             
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3 font-bold text-2xl mb-6 text-white tracking-widest uppercase">
-                <Hexagon className="h-8 w-8 text-indigo-500" />
-                <span>NEXA POS</span>
+                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
               </div>
               <p className="text-gray-400 font-light leading-relaxed mb-8 max-w-sm">
                 NEXA POS is the ultimate point of sale system, crafting high-performance, real-time POS and inventory solutions that redefine retail architecture globally.
               </p>
               <div className="flex items-center gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
+                <a href="https://x.com/hananirfan91" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Twitter size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
+                <a href="https://www.linkedin.com/in/hananirfan/" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Linkedin size={18} />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
+                <a href="https://instagram.com/hananirfan2026" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all">
                   <Instagram size={18} />
                 </a>
               </div>
@@ -402,8 +444,8 @@ export default function Landing() {
               <ul className="space-y-4 font-light text-sm">
                 <li><Link to="/features/billing" className="hover:text-indigo-400 transition-colors">Fast & Easy Billing</Link></li>
                 <li><Link to="/features/inventory" className="hover:text-indigo-400 transition-colors">Real-Time Inventory</Link></li>
-                <li><Link to="/features/reports" className="hover:text-indigo-400 transition-colors">Advanced Reports</Link></li>
-                <li><Link to="/features/crm" className="hover:text-indigo-400 transition-colors">CRM & Ledgers</Link></li>
+                <li><Link to="/support" className="hover:text-indigo-400 transition-colors">Help & Support</Link></li>
+                <li><Link to="/download" className="hover:text-indigo-400 transition-colors">Download App</Link></li>
                 <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
                 <li><Link to="/signup" className="hover:text-indigo-400 transition-colors">Sign Up</Link></li>
               </ul>
@@ -414,7 +456,7 @@ export default function Landing() {
               <ul className="space-y-4 font-light text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin size={16} className="shrink-0 mt-0.5 text-indigo-400" />
-                  <span>South Seas Centre, HK</span>
+                  <span>Abu Dhabi Road, Babar Colony, RYK</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail size={16} className="shrink-0 text-indigo-400" />

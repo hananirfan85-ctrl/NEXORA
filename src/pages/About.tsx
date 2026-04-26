@@ -29,7 +29,7 @@ export default function About() {
           <div className="mb-16">
             <h2 className="text-3xl font-display font-bold mb-8">The Visionaries Behind It</h2>
             
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-3 gap-8">
               {/* Hanan Irfan */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
                 <div>
@@ -99,6 +99,41 @@ export default function About() {
                    </div>
                 </div>
               </div>
+              
+              {/* Danish Ali */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
+                <div>
+                  <h3 className="text-3xl font-bold font-display text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-green-300 mb-4">Danish Ali</h3>
+                  <p className="text-gray-300 font-light text-base mb-8">
+                    Co-Founder. Brings innovative ideas to our operations, ensuring that the software perfectly aligns with our users' real-world needs.
+                  </p>
+                  
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex items-center gap-4 text-gray-200">
+                      <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
+                        <User size={18} className="text-teal-400" />
+                      </div>
+                      <div className="font-mono text-sm uppercase tracking-widest">20 Years Old</div>
+                    </li>
+                    <li className="flex items-center gap-4 text-gray-200">
+                      <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
+                        <GraduationCap size={18} className="text-teal-400" />
+                      </div>
+                      <div>
+                        <div className="font-mono text-sm uppercase tracking-widest">KFUEIT University</div>
+                        <div className="text-xs text-gray-400 mt-1">4th Semester, BSCS</div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex justify-center mt-auto">
+                   <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-teal-500/20 shadow-[0_0_30px_-10px_rgba(45,212,191,0.5)]">
+                     <div className="absolute inset-0 bg-gradient-to-br from-teal-600 to-emerald-800 flex items-center justify-center">
+                        <span className="text-4xl font-display font-bold text-white/50">DA</span>
+                     </div>
+                   </div>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -114,7 +149,7 @@ export default function About() {
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Anywhere, Offline & Online</h4>
-                <p>NEXA POS works seamlessly through cutting-edge PWA technology. Whether your internet goes down or you're on a blazing fast connection, you keep selling. Once you're back online, everything syncs flawlessly and securely.</p>
+                <p>NEXA POS works seamlessly through cutting-edge Electron integration on Desktop, enabling extreme performance. Keep selling offline, and sync to the cloud instantly when back online.</p>
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Enterprise Feature Set</h4>
@@ -122,7 +157,7 @@ export default function About() {
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Install Anywhere</h4>
-                <p>No app store required. You can install NEXA POS directly on iOS, Android, or Desktop directly from your browser, making rollouts across your retail business instantaneous.</p>
+                <p>Download our cross-platform Electron executable from our website and launch it on any Desktop environment for an instantaneous, app-like experience.</p>
               </div>
             </div>
           </div>
