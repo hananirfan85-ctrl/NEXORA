@@ -57,11 +57,15 @@ export default function About() {
                   </ul>
                 </div>
                 <div className="flex justify-center mt-auto">
-                   <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-indigo-500/20 shadow-[0_0_30px_-10px_rgba(99,102,241,0.5)]">
-                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 flex items-center justify-center">
-                        <img  src="https://pbs.twimg.com/profile_images/2022622427378020352/xOqGLbdb_400x400.jpg"className="text-4xl font-display font-bold text-white/50">
-                     </div>
-                   </div>
+                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-indigo-500/20 shadow-[0_0_30px_-10px_rgba(99,102,241,0.5)]">
+  <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 flex items-center justify-center">
+    <img
+      src="https://pbs.twimg.com/profile_images/2022622427378020352/xOqGLbdb_400x400.jpg"
+      alt="Hanan Irfan"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</div>
                 </div>
               </div>
 
