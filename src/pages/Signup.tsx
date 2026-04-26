@@ -85,6 +85,7 @@ export default function Signup() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         />
+        <img src="logo.png">
         <motion.div 
           className="absolute w-[60vw] h-[60vw] rounded-full blur-[120px] bg-indigo-600/10 mix-blend-screen"
           animate={{ x: [-100, 100, -100], y: [-50, 50, -50] }}
