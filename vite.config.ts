@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['logo.png'],
+        includeAssets: ['logo.png', 'icon-192.png', 'icon-512.png', 'robots.txt', 'sitemap.xml'],
         manifest: {
           name: 'NEXA POS',
           short_name: 'NEXA',
@@ -23,13 +23,13 @@ export default defineConfig(({mode}) => {
           start_url: '/',
           icons: [
             {
-              src: 'logo.png',
+              src: 'icon-192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any maskable'
             },
             {
-              src: 'logo.png',
+              src: 'icon-512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'
