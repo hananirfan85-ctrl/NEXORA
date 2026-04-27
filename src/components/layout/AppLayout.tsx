@@ -27,7 +27,7 @@ export function AppLayout() {
   
   // PWA & Offline State
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showInstallModal, setShowInstallModal] = useState(false);
   const { deferredPrompt, initiateInstall } = usePwaInstall();
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export function AppLayout() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 shrink-0">
           <div className="flex items-center gap-2 text-indigo-600 font-bold text-xl tracking-tight">
-            <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
+            <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto bg-white p-1 rounded-lg" />
           </div>
           <button onClick={closeMobileMenu} className="p-1 text-gray-500 hover:text-gray-700 md:hidden">
             <X size={20} />
@@ -192,7 +192,7 @@ export function AppLayout() {
               <Menu size={24} />
             </button>
             <div className="text-indigo-600 font-bold tracking-tight md:hidden flex items-center gap-2 mr-2">
-              <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto" />
+              <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto bg-white p-1 rounded-lg" />
             </div>
           </div>
           
@@ -204,16 +204,20 @@ export function AppLayout() {
               </div>
             )}
             
-            {deferredPrompt && (
-              <button 
-                onClick={initiateInstall}
-                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200 shrink-0"
-              >
-                <Download size={16} />
-                <span className="hidden sm:inline">Install App</span>
-                <span className="sm:hidden">Install</span>
-              </button>
-            )}
+            <button 
+              onClick={() => {
+                if (deferredPrompt) {
+                  initiateInstall();
+                } else {
+                  setShowInstallModal(true);
+                }
+              }}
+              className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-sm font-semibold transition-colors border border-indigo-200 shrink-0"
+            >
+              <Download size={16} />
+              <span className="hidden sm:inline">Install App</span>
+              <span className="sm:hidden">Install</span>
+            </button>
 
             <button 
               onClick={() => navigate('/home')}
@@ -237,6 +241,57 @@ export function AppLayout() {
           </motion.div>
         </div>
       </main>
+
+      {/* PWA Install Modal */}
+      <AnimatePresence>
+        {showInstallModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col border border-gray-200"
+            >
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                  <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto border rounded-xl" />
+                  <h3 className="text-xl font-bold text-gray-900">Install NEXA POS App</h3>
+                </div>
+                <button onClick={() => setShowInstallModal(false)} className="p-2 text-gray-400 hover:text-gray-600 rounded-full transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6 text-sm text-gray-600 space-y-4">
+                <p>NEXA POS is a Progressive Web App (PWA). You can install it directly to your device for offline use without going through an app store.</p>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <strong className="text-gray-900 block mb-2">On iOS (Safari):</strong>
+                  <ol className="list-decimal pl-5 space-y-1">
+                    <li>Tap the <strong>Share</strong> button.</li>
+                    <li>Tap <strong>Add to Home Screen</strong>.</li>
+                  </ol>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <strong className="text-gray-900 block mb-2">On Desktop (Chrome/Edge):</strong>
+                  <ol className="list-decimal pl-5 space-y-1">
+                    <li>Click the <strong>Install</strong> icon in the address bar.</li>
+                    <li>Or click the 3-dots menu and select <strong>Install NEXA POS</strong>.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div className="p-6 bg-gray-50 border-t border-gray-200 flex gap-3 shrink-0">
+                <button
+                  onClick={() => setShowInstallModal(false)}
+                  className="w-full px-4 py-3 text-sm font-medium text-white bg-indigo-600 rounded-xl hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20"
+                >
+                  Got it
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

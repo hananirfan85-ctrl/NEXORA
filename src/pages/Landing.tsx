@@ -110,7 +110,7 @@ export default function Landing() {
             <div className="flex justify-between h-20 items-center">
               {/* Logo */}
               <div className="flex items-center gap-3 text-white font-display font-bold text-2xl tracking-widest uppercase shrink-0">
-                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
+                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto bg-white p-1 rounded-lg" />
               </div>
               
               {/* Desktop Nav */}
@@ -418,7 +418,7 @@ export default function Landing() {
             
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3 font-bold text-2xl mb-6 text-white tracking-widest uppercase">
-                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto" />
+                <img src="/logo.png" alt="NEXA POS Logo" className="h-10 w-auto bg-white p-1 rounded-lg" />
               </div>
               <p className="text-gray-400 font-light leading-relaxed mb-8 max-w-sm">
                 NEXA POS is the ultimate point of sale system, crafting high-performance, real-time POS and inventory solutions that redefine retail architecture globally.
@@ -483,7 +483,7 @@ export default function Landing() {
             >
               <div className="p-6 border-b border-white/10 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-3">
-                  <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto" />
+                  <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto bg-white p-1 rounded-lg" />
                   <h3 className="text-xl font-bold text-white">Install NEXA POS App</h3>
                 </div>
                 <button onClick={() => setShowInstallModal(false)} className="p-2 text-gray-400 hover:text-white rounded-full transition-colors">
