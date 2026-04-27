@@ -98,12 +98,14 @@ export default function About() {
                 <div className="flex justify-center mt-auto">
                    <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-blue-500/20 shadow-[0_0_30px_-10px_rgba(59,130,246,0.5)]">
                      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-800 flex items-center justify-center">
-                        <span className="text-4xl font-display font-bold text-white/50">AA</span>
-                     </div>
+<img
+  src="data:image/jpeg;base64,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"
+  alt="Profile"
+  className="w-full h-full object-cover"
+/>                     </div>
                    </div>
                 </div>
               </div>
-              
               {/* Danish Ali */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col justify-between">
                 <div>
@@ -130,10 +132,14 @@ export default function About() {
                     </li>
                   </ul>
                 </div>
-                <div className="flex justify-center mt-auto">
+                 <div className="flex justify-center mt-auto">
                    <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-teal-500/20 shadow-[0_0_30px_-10px_rgba(45,212,191,0.5)]">
                      <div className="absolute inset-0 bg-gradient-to-br from-teal-600 to-emerald-800 flex items-center justify-center">
-                        <span className="text-4xl font-display font-bold text-white/50">DA</span>
+                      <img
+  src="https://pbs.twimg.com/media/HG1xU2sbwAAbik3?format=jpg&name=900x900"
+  alt="Profile"
+  className="w-full h-full object-cover"
+/>      
                      </div>
                    </div>
                 </div>
