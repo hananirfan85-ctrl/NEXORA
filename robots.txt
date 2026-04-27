@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://naxapossystem.vercel.app/sitemap.xml
