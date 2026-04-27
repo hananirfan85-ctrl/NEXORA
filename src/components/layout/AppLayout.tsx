@@ -210,14 +210,6 @@ export function AppLayout() {
             <div className="text-indigo-600 font-bold tracking-tight md:hidden flex items-center gap-2 mr-2">
               <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto" />
             </div>
-            <div className="relative w-full max-w-sm hidden sm:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="text"
-                placeholder="Search anything..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-100 border-transparent rounded-lg text-sm focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
-              />
-            </div>
           </div>
           
           <div className="flex items-center gap-2 sm:gap-3 flex-1 sm:flex-none justify-end overflow-x-auto no-scrollbar shrink-0">

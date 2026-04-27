@@ -65,27 +65,28 @@ export default function Customers() {
 
     try {
       if (editingCustomer) {
-        const { error } = await supabase.from('customers').update({
+        const { data, error } = await supabase.from('customers').update({
           name: newCustomer.name,
           email: newCustomer.email,
           phone: newCustomer.phone,
           address: newCustomer.address
-        }).eq('id', editingCustomer.id);
+        }).eq('id', editingCustomer.id).select().single();
         if (error) throw error;
         toast.success("Customer updated");
+        setCustomers(prev => prev.map(c => c.id === editingCustomer.id ? data : c));
       } else {
-        const { error } = await supabase.from('customers').insert([{
+        const { data, error } = await supabase.from('customers').insert([{
           user_id: userData.user.id,
           ...newCustomer
-        }]);
+        }]).select().single();
         if (error) throw error;
         toast.success("Customer added");
+        setCustomers(prev => [data, ...prev]);
       }
 
       setShowAddModal(false);
       setEditingCustomer(null);
       setNewCustomer({ name: '', email: '', phone: '', address: '' });
-      fetchCustomers();
     } catch (err: any) {
       if (err.message?.includes('Could not find the table') || err.message?.includes('relation "public.customers" does not exist')) {
         toast.error('Table missing! Please go to Admin Panel and run the provided SQL queries in Supabase.', { duration: 6000 });
@@ -107,7 +108,7 @@ export default function Customers() {
       const { error } = await supabase.from('customers').delete().eq('id', id);
       if (error) throw error;
       toast.success("Customer deleted");
-      fetchCustomers();
+      setCustomers(prev => prev.filter(c => c.id !== id));
     } catch (err: any) {
       toast.error(err.message || "Failed to delete customer");
     }
@@ -139,13 +140,13 @@ export default function Customers() {
     const entryType = newLedgerEntry.type;
 
     try {
-      const { error } = await supabase.from('customer_ledgers').insert([{
+      const { data, error } = await supabase.from('customer_ledgers').insert([{
         customer_id: selectedCustomerForLedger.id,
         user_id: user.id,
         amount: amount,
         type: entryType,
         description: newLedgerEntry.description
-      }]);
+      }]).select().single();
       if (error) throw error;
 
       // Update customer ledger_balance
@@ -160,11 +161,11 @@ export default function Customers() {
       if (updateError) throw updateError;
       
       setNewLedgerEntry({ amount: '', type: 'charge', description: '' });
-      fetchLedger(selectedCustomerForLedger.id);
-      fetchCustomers();
+      setLedgerEntries(prev => [data, ...prev]);
       
       // Update local state for immediate feedback
       setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
+      setCustomers(prev => prev.map(c => c.id === selectedCustomerForLedger.id ? { ...c, ledger_balance: newBalance } : c));
       toast.success("Ledger entry added");
     } catch (err: any) {
       toast.error(err.message || "Failed to add ledger entry. Make sure SQL setup is complete.");
@@ -445,8 +446,8 @@ export default function Customers() {
                                 if (updateError) throw updateError;
                                 
                                 setSelectedCustomerForLedger(prev => prev ? { ...prev, ledger_balance: newBalance } : prev);
-                                fetchLedger(selectedCustomerForLedger.id);
-                                fetchCustomers();
+                                setLedgerEntries(prev => prev.filter(e => e.id !== entry.id));
+                                setCustomers(prev => prev.map(c => c.id === selectedCustomerForLedger.id ? { ...c, ledger_balance: newBalance } : c));
                                 toast.success("Ledger entry deleted");
                               } catch (err: any) {
                                 toast.error(err.message || "Failed to delete entry. Make sure SQL setup is complete.");

@@ -8,7 +8,7 @@ export default function Pricing() {
     {
       name: "Starter",
       description: "Perfect for single-location retail setups.",
-      price: "$49",
+      price: "500 PKR",
       period: "/month",
       features: [
         "1 POS Terminal",
@@ -23,13 +23,13 @@ export default function Pricing() {
     {
       name: "Professional",
       description: "Advanced controls for growing multi-location teams.",
-      price: "$149",
+      price: "3000 PKR",
       period: "/month",
       features: [
         "5 POS Terminals",
         "Advanced Matrix & Analytics",
         "Offline Redundancy Sync",
-        "Predictive Depletion Alerts",
+        "Stock Depletion Alerts",
         "Priority 24/7 Support"
       ],
       cta: "Get Started",
@@ -109,7 +109,7 @@ export default function Pricing() {
               </div>
               
               <div className="mb-8 flex items-baseline gap-2">
-                <span className="text-5xl font-mono font-bold text-white tracking-tighter">{plan.price}</span>
+                <span className="text-4xl lg:text-5xl font-mono font-bold text-white tracking-tighter">{plan.price}</span>
                 <span className="text-gray-400 font-sans">{plan.period}</span>
               </div>
               

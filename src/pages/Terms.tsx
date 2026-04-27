@@ -30,7 +30,7 @@ export default function Terms() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-3">2. Description of Service</h2>
               <p>
-                NEXA POS provides a comprehensive Point of Sale (POS) and inventory management system designed to operate both online and offline through Progressive Web App (PWA) technology. The service includes, but is not limited to, inventory tracking, sales processing, customer relationship management, and AI-assisted analytics.
+                NEXA POS provides a comprehensive Point of Sale (POS) and inventory management system designed to operate both online and offline through Progressive Web App (PWA) technology. The service includes, but is not limited to, inventory tracking, sales processing, customer relationship management, and advanced analytics.
               </p>
             </section>
 

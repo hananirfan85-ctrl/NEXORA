@@ -70,7 +70,7 @@ export default function Inventory() {
     setFormLoad(true);
 
     if (editingId) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .update({
           name: formData.name,
@@ -80,24 +80,28 @@ export default function Inventory() {
           stock: formData.stock,
           unit: formData.unit
         })
-        .eq('id', editingId);
+        .eq('id', editingId)
+        .select()
+        .single();
 
-      if (!error) {
+      if (!error && data) {
         logActivity('UPDATE_PRODUCT', `Updated product: ${formData.name}`);
-        fetchProducts();
+        setProducts(prev => prev.map(p => p.id === editingId ? data : p));
         closeModal();
       }
     } else {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .insert([{
           user_id: user.id,
           ...formData
-        }]);
+        }])
+        .select()
+        .single();
 
-      if (!error) {
+      if (!error && data) {
         logActivity('ADD_PRODUCT', `Added new product: ${formData.name}`);
-        fetchProducts();
+        setProducts(prev => [data, ...prev]);
         closeModal();
       }
     }
@@ -128,7 +132,7 @@ export default function Inventory() {
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (!error) {
       logActivity('DELETE_PRODUCT', `Erased product and all associated sales/records: ${name}`);
-      fetchProducts();
+      setProducts(prev => prev.filter(p => p.id !== id));
     }
     
     setFormLoad(false);

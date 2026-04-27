@@ -46,7 +46,7 @@ const features = {
     title: 'Real-Time Inventory',
     subtitle: 'Track every SKU across all locations with surgical precision.',
     desc: 'Deep inventory management that scales with your business. Get real-time alerts for low stock, track supplier performance, and manage complex variants with ease.',
-    benefits: ['Real-time stock deduction', 'Expiry date tracking for perishables', 'Purchase order generation', 'Supplier management portal', 'Low stock AI predictions'],
+    benefits: ['Real-time stock deduction', 'Low stock warnings', 'Category filtering', 'Detailed price management', 'Automated low stock alerts'],
     sections: [
       {
         icon: BarChart3,
@@ -60,18 +60,18 @@ const features = {
       },
       {
         icon: Zap,
-        title: "Supplier Automation",
-        content: "When stock hits the reorder point, NEXA POS can automatically draft a purchase order to your preferred supplier. Review, approve, and send in three clicks."
+        title: "Fast Categorization",
+        content: "Stop scrolling endlessly. Quickly categorize your items by type and instantly filter through your catalog during restocks or inventory audits."
       },
       {
         icon: Rocket,
-        title: "Variant & Matrix Management",
-        content: "Selling shirts in 5 sizes and 6 colors? Managing 30 SKUs used to be a nightmare. Our grid-based variant manager lets you update prices and stock for complex item families in one screen."
+        title: "Simplified Matrix Updates",
+        content: "Quickly manage stock and pricing across your entire retail catalog without navigating through dozens of complex menus."
       },
       {
         icon: Clock,
-        title: "Expiration Date Monitoring",
-        content: "For FMCG or pharmaceutical businesses, track item expiration dates perfectly. The system alerts you 30 days before items expire to prioritize discounting or liquidation."
+        title: "Stock Movement Tracking",
+        content: "Every inventory adjustment and sale is recorded. Trace the exact lifecycle of any product to eliminate shrinkage and maintain balanced books."
       },
       {
         icon: CheckCircle,
@@ -83,71 +83,51 @@ const features = {
   'reports': {
     title: 'Advanced Reports',
     subtitle: 'Actionable insights, generated the moment you sell.',
-    desc: 'Stop guessing and start knowing. Our Analytics engine parses every transaction to give you beautifully rendered charts on profit margins, top-selling items, and performance trends.',
-    benefits: ['Live profit/loss dashboards', 'Exportable custom reports', 'Sales predictions based on historical data', 'Multi-branch performance roll-up', 'Cash register balance tracking'],
+    desc: 'Stop guessing and start knowing. Our Analytics engine parses every transaction to give you beautifully rendered charts on profit margins, gross revenue, and transaction trends.',
+    benefits: ['Live profit/loss dashboards', 'Gross revenue charting', 'Profit trend lines', 'Last 30-day analytics', 'Transaction volume tracking'],
     sections: [
       {
         icon: BarChart3,
         title: "Live Dashboarding",
-        content: "Watch your business pulse in real-time. The dashboard refreshes instantly as sales occur at the register. Compare today's performance against yesterday, last week, or last year with a single toggle."
+        content: "Watch your business pulse in real-time. The dashboard aggregates gross revenue and net profit instantly as sales occur at the register."
       },
       {
         icon: Rocket,
-        title: "Predictive Engines",
-        content: "NEXA POS analyzes historical sales velocity to predict when you will run out of a specific item. Stop reacting to zero-stock events and start forecasting your purchasing needs weeks in advance."
+        title: "Daily Revenue Charting",
+        content: "NEXA POS visually graphs your sales over the last 30 days, helping you easily identify which days had the highest gross revenue."
       },
       {
         icon: ShieldCheck,
-        title: "Employee Performance Metrics",
-        content: "See who your top performers are. Track metrics like average basket size, units per transaction, and return rates per employee."
+        title: "Profit Trend Lines",
+        content: "A dedicated profit trend line chart clearly delineates your net profit margins over time, letting you trace profitability distinct from sheer volume."
       },
       {
         icon: Clock,
-        title: "Automated Reporting",
-        content: "Schedule your critical reports to be generated and emailed directly to your inbox at the end of the day. Stay informed without logging in."
-      },
-      {
-        icon: Zap,
-        title: "Tax & Financial Prep",
-        content: "Export standardized financial logs directly to CSV or Excel. Generate dedicated tax summaries with split rates instantly to simplify your end-of-year accounting."
-      },
-      {
-        icon: CheckCircle,
-        title: "Location-Specific Views",
-        content: "Compare different retail locations side-by-side. Understand foot traffic differences, analyze the best-selling items per branch, and rebalance inventory effectively."
+        title: "Data Reliability",
+        content: "Your reports are instantly generated directly from your sales ledger. No manual spreadsheet export required to know your monthly standing."
       }
     ]
   },
   'crm': {
     title: 'CRM & Ledgers',
-    subtitle: 'Track loyalty, manage credit, and retain your best customers.',
-    desc: 'Customer relationships dictate future revenue. Maintain a highly detailed digital ledger for each customer, tracking their credit, purchases, and contact details entirely securely in the cloud.',
-    benefits: ['Granular Ledger Management', 'Automated Credit Due Reminders', 'VIP Customer Segmentation', 'Loyalty Points Auto-Calculation', 'Bulk Message Integration Ready'],
+    subtitle: 'Track loyalty and retain your best customers.',
+    desc: 'Customer relationships dictate future revenue. Maintain a highly detailed digital ledger for each customer, tracking their loyalty points, total purchases, and contact details entirely securely in the cloud.',
+    benefits: ['Detailed Customer Records', 'Contact Info Storage', 'Purchase Volume Tracking', 'Loyalty Points Tracking', 'Quick Identification'],
     sections: [
       {
         icon: ShieldCheck,
-        title: "Encrypted Customer Databases",
-        content: "Keep all client PII safely encrypted. Phone numbers, emails, and physical addresses are safely stored away from the POS register but accessible for marketing."
+        title: "Secure Customer Databases",
+        content: "Keep all client information safely stored. Phone numbers, emails, and physical addresses are easily accessible."
       },
       {
         icon: Zap,
         title: "Digital Customer Ledgers",
-        content: "Replace manual 'Udhar' books with instant digital equivalents. Record charges and payments, securely tracking the balance owed by VIP customers automatically across the entire business."
+        content: "Create records for your VIPs. Quickly retrieve customer details to speed up their experience at checkout."
       },
       {
         icon: Rocket,
-        title: "Loyalty Scoring Algorithm",
-        content: "Every purchase automatically factors into the customer's loyalty profile. Track their VIP status objectively, based strictly on the metrics of their purchase volume and engagement."
-      },
-      {
-        icon: Clock,
-        title: "Transaction History Log",
-        content: "Recall every previous receipt generated by a specific customer. Simplify warranty claims or product returns seamlessly without needing a physical receipt paper."
-      },
-      {
-        icon: BarChart3,
-        title: "Instant Advance Tracking",
-        content: "If a customer over-pays or deposits an advance for a special order, the ledger intuitively tracks 'Advance' balances natively, deducting them automatically on future checkouts."
+        title: "Points & Purchase Tracking",
+        content: "NEXA POS stores total lifetime purchases and loyalty points so you can easily identify your most valuable customers."
       }
     ]
   },
@@ -155,12 +135,12 @@ const features = {
     title: 'Multi-User Access',
     subtitle: 'Granular permissions securely gating your empire.',
     desc: 'Scale your business by building out your workforce safely. Provide roles and strict permissions to various employees, giving them exactly what they need, and nothing more.',
-    benefits: ['Role Based Access Control', 'Admin Override Capabilities', 'Real-time session management', 'Immutable Audit Trails', 'Supervisor Action Tracking'],
+    benefits: ['Role Based Access Control', 'Admin Override Capabilities', 'Action Activity Logs', 'Pending Approval Tiers', 'Data Security'],
     sections: [
       {
         icon: ShieldCheck,
         title: "Row Level Security (RLS)",
-        content: "Postgres RLS is automatically enforced. Standard cashiers have absolutely zero programmatic ability to access aggregate financial data or sensitive analytics, even if they tried."
+        content: "Postgres RLS is automatically enforced. Users are strictly contained within their assigned data access boundaries."
       },
       {
         icon: Zap,
@@ -168,19 +148,32 @@ const features = {
         content: "Every new user account created requires strict Super Admin verification. You dictate who joins your digital environment. Prevent unauthorized endpoints permanently."
       },
       {
-        icon: Rocket,
-        title: "Cashier vs Manager Views",
-        content: "Provide managers with access to CRM and Returns processing, while limiting cashiers strictly to the POS module and closing cash drops. Granular views enhance layout focus."
+        icon: Clock,
+        title: "Action Activity Logs",
+        content: "Important actions like completing sales are logged directly into the system. By tracking precisely who processed which transaction, you ensure accountability."
+      }
+    ]
+  },
+  'cashflow': {
+    title: 'Cash Flow Insights',
+    subtitle: 'Track every income and expense in your business effortlessly.',
+    desc: 'With this feature, you can track every income and expense in your business. For example, you can enter each transaction by date—recording when money came in and when money went out. This will allow you to see when your business is in profit and when your cash flow is negative.',
+    benefits: ['Detailed Transaction Histories', 'Categorize Income vs Expenses', 'Live Net Balance Display', 'Immutable Historical Records', 'Secure Cloud Summarizations'],
+    sections: [
+      {
+        icon: BarChart3,
+        title: 'Net Profit Tracking',
+        content: 'Understand your true financial standing at a glance. By inputting operational expenses against your automated POS sales income, you can view your real net balance.'
       },
       {
         icon: Clock,
-        title: "Shift Tracking Audits",
-        content: "Every action carries a UUID. By tracking precisely who processed which transaction, or deleted which invoice, you ensure absolute security and accountability across all cashiers."
+        title: 'Chronological Logs',
+        content: 'Log daily expenses like utility bills and bulk supply purchases. Scroll back through months of chronological data to pinpoint cash flow bottlenecks.'
       },
       {
-        icon: BarChart3,
-        title: "Remote Revocation",
-        content: "If an employee leaves the company, instantly revoke their access remotely. Their instances will be immediately terminated with active sessions securely timed out."
+        icon: ShieldCheck,
+        title: 'Data Integrity',
+        content: 'Every record is encrypted in the database. Ensure no fraudulent entries are made by leveraging strict user access controls mapped to your cash flow ledger.'
       }
     ]
   }

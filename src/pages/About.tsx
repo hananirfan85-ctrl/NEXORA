@@ -153,7 +153,7 @@ export default function About() {
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Enterprise Feature Set</h4>
-                <p>Complete with an AI Chatbot, CRM Admin Panel, automated analytics, offline caching mechanisms, and secure Supabase backend to keep your inventory matrix perfectly balanced at all times.</p>
+                <p>Complete with an intuitive CRM Admin Panel, automated analytics, offline caching mechanisms, and secure Supabase backend to keep your inventory matrix perfectly balanced at all times.</p>
               </div>
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
                 <h4 className="text-white font-bold mb-3 tracking-wide">Install Anywhere</h4>

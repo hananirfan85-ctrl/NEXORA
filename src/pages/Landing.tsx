@@ -138,6 +138,7 @@ export default function Landing() {
                     <Link to="/features/inventory" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Real-Time Inventory</Link>
                     <Link to="/features/reports" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Advanced Reports</Link>
                     <Link to="/features/crm" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">CRM & Ledgers</Link>
+                    <Link to="/features/cashflow" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Cash Flow Insights</Link>
                     <Link to="/features/users" className="block px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">Multi-User Access</Link>
                   </div>
                 </div>
@@ -179,6 +180,7 @@ export default function Landing() {
                 <Link to="/features/inventory" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Real-Time Inventory</Link>
                 <Link to="/features/reports" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Advanced Reports</Link>
                 <Link to="/features/crm" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>CRM & Ledgers</Link>
+                <Link to="/features/cashflow" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Cash Flow Insights</Link>
                 <Link to="/features/users" className="block text-sm text-gray-400 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Multi-User Access</Link>
               </div>
               <Link to="/pricing" className="block text-base font-medium text-gray-300 hover:text-white" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
@@ -442,7 +444,7 @@ export default function Landing() {
               <ul className="space-y-4 font-light text-sm">
                 <li><Link to="/features/billing" className="hover:text-indigo-400 transition-colors">Fast & Easy Billing</Link></li>
                 <li><Link to="/features/inventory" className="hover:text-indigo-400 transition-colors">Real-Time Inventory</Link></li>
-                <li><Link to="/support" className="hover:text-indigo-400 transition-colors">Help & Support</Link></li>
+                <li><Link to="/features/cashflow" className="hover:text-indigo-400 transition-colors">Cash Flow</Link></li>
                 <li><Link to="/pricing" className="hover:text-indigo-400 transition-colors">Pricing</Link></li>
                 <li><Link to="/signup" className="hover:text-indigo-400 transition-colors">Sign Up</Link></li>
               </ul>

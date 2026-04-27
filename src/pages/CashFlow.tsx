@@ -37,9 +37,13 @@ export default function CashFlows() {
 
       if (error) throw error;
       setCashFlows(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching cash flows:', error);
-      toast.error('Failed to load cash flows. You may be viewing offline data.');
+      if (error.code === 'PGRST205') {
+        toast.error('Cash Flow table is missing. Please run the SQL schema in your Supabase dashboard.');
+      } else {
+        toast.error('Failed to load cash flows. You may be viewing offline data.');
+      }
     } finally {
       setLoading(false);
     }
@@ -54,23 +58,27 @@ export default function CashFlows() {
     }
 
     try {
-      const { error } = await supabase.from('cash_flows').insert([{
+      const { data, error } = await supabase.from('cash_flows').insert([{
         user_id: user.id,
         date,
         type,
         amount: Number(amount),
         description
-      }]);
+      }]).select().single();
 
       if (error) throw error;
       toast.success('Record added successfully');
+      setCashFlows(prev => [data, ...prev].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
       setIsModalOpen(false);
       setAmount('');
       setDescription('');
-      fetchCashFlows();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding record:', error);
-      toast.error('Failed to add record');
+      if (error.code === 'PGRST205') {
+        toast.error('Table missing. Please run the SQL schema in Supabase directly.');
+      } else {
+        toast.error('Failed to add record');
+      }
     }
   };
 
@@ -80,7 +88,7 @@ export default function CashFlows() {
       const { error } = await supabase.from('cash_flows').delete().eq('id', id);
       if (error) throw error;
       toast.success('Record deleted');
-      fetchCashFlows();
+      setCashFlows(prev => prev.filter(cf => cf.id !== id));
     } catch (error) {
       console.error('Error deleting record:', error);
       toast.error('Failed to delete record');
