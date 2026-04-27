@@ -106,7 +106,7 @@ export default function Login() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 translate-y-0" />
           
           <div>
-            <div className="flex justify-center text-indigo-600 mb-6">
+            <div className="flex justify-center mb-6">
               <img src="/logo.png" alt="NEXA POS Logo" className="h-12 w-auto drop-shadow-md" />
             </div>
             <h2 className="text-center text-3xl font-display font-bold text-white tracking-tight">

@@ -482,7 +482,10 @@ export default function Landing() {
               className="bg-[#111111] border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
             >
               <div className="p-6 border-b border-white/10 flex items-center justify-between shrink-0">
-                <h3 className="text-xl font-bold text-white">Install NEXA POS App</h3>
+                <div className="flex items-center gap-3">
+                  <img src="/logo.png" alt="NEXA POS Logo" className="h-8 w-auto" />
+                  <h3 className="text-xl font-bold text-white">Install NEXA POS App</h3>
+                </div>
                 <button onClick={() => setShowInstallModal(false)} className="p-2 text-gray-400 hover:text-white rounded-full transition-colors">
                   <X size={20} />
                 </button>
