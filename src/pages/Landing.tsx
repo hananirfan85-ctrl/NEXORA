@@ -7,31 +7,18 @@ import {
   Users, Smartphone, Settings, Building2, Store, PlusCircle, Factory, Shield,
   ChevronDown, Hexagon, Menu
 } from 'lucide-react';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
 export default function Landing() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const { deferredPrompt, initiateInstall } = usePwaInstall();
   const [showInstallModal, setShowInstallModal] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // ...existing...
-    const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-  }, []);
-
   const handleDownloadClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null);
-      }
+      await initiateInstall();
     } else {
       setShowInstallModal(true);
     }
@@ -148,6 +135,11 @@ export default function Landing() {
               {/* Desktop CTA */}
               <div className="hidden md:flex items-center gap-4">
                 <Link to="/login" className="text-sm font-sans font-medium text-gray-300 hover:text-white transition-colors">Sign In</Link>
+                {deferredPrompt && (
+                  <button onClick={handleDownloadClick} className="text-sm font-sans font-medium text-white border border-white/20 hover:bg-white/10 px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                    <Download size={16} /> Install PWA
+                  </button>
+                )}
                 <Link to="/signup" className="text-sm font-sans font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-indigo-600/20">
                   Get Started
                 </Link>
@@ -155,6 +147,11 @@ export default function Landing() {
 
               {/* Mobile Menu Toggle */}
               <div className="md:hidden flex items-center gap-4">
+                {deferredPrompt && (
+                  <button onClick={handleDownloadClick} className="text-gray-300 p-2">
+                    <Download size={20} />
+                  </button>
+                )}
                 <Link to="/login" className="text-sm font-medium text-indigo-400">Login</Link>
                 <button 
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
