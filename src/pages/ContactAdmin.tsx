@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Send, MessageSquare, AlertCircle, CheckCircle } from 'lucide-react';
+import { Send, MessageSquare, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 export default function ContactAdmin() {
   const { user } = useAuth();
@@ -10,6 +10,33 @@ export default function ContactAdmin() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [history, setHistory] = useState<any[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchHistory();
+    }
+  }, [user]);
+
+  const fetchHistory = async () => {
+    try {
+      setHistoryLoading(true);
+      const { data, error } = await supabase
+        .from('user_messages')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setHistory(data || []);
+    } catch (err: any) {
+      console.error('Error fetching message history:', err);
+      // Suppress PGRST205 for missing table
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,21 +46,23 @@ export default function ContactAdmin() {
     setError('');
     
     try {
-      const { error: submitError } = await supabase.from('user_messages').insert([{
+      const { data, error: submitError } = await supabase.from('user_messages').insert([{
         user_id: user.id,
         email: user.email,
         subject,
         message,
         status: 'pending'
-      }]);
+      }]).select().single();
       
       if (submitError) throw submitError;
       
       setSuccess(true);
       setSubject('');
       setMessage('');
+      if (data) {
+        setHistory(prev => [data, ...prev]);
+      }
       
-      // Auto-hide success message after some time
       setTimeout(() => setSuccess(false), 5000);
       
     } catch (err: any) {
@@ -133,6 +162,49 @@ export default function ContactAdmin() {
           </form>
         )}
       </div>
+
+      {history.length > 0 && (
+        <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Message History</h2>
+          <div className="space-y-6">
+            {history.map((msg) => (
+              <div key={msg.id} className="border border-gray-100 rounded-xl p-5 bg-gray-50/50">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{msg.subject}</h3>
+                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                      <Clock size={14} />
+                      {new Date(msg.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                  <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                    msg.status === 'resolved' ? 'bg-green-100 text-green-700' :
+                    msg.status === 'in_progress' ? 'bg-amber-100 text-amber-700' :
+                    'bg-gray-200 text-gray-700'
+                  }`}>
+                    {msg.status.replace('_', ' ').toUpperCase()}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-700 mb-4 whitespace-pre-wrap bg-white p-3 rounded-lg border border-gray-100">
+                  {msg.message}
+                </div>
+                
+                {msg.reply && (
+                  <div className="mt-4 bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-2 text-indigo-700 font-semibold text-sm">
+                      <MessageSquare size={16} />
+                      Admin Reply:
+                    </div>
+                    <div className="text-sm text-indigo-900 whitespace-pre-wrap">
+                      {msg.reply}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
