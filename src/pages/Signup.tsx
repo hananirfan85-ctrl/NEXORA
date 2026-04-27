@@ -11,12 +11,20 @@ export default function Signup() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [captchaQ, setCaptchaQ] = useState({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });
+  const [captchaA, setCaptchaA] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!termsAccepted) {
       setError('You must accept the terms and conditions to register.');
+      return;
+    }
+    if (parseInt(captchaA) !== captchaQ.a + captchaQ.b) {
+      setError('Incorrect CAPTCHA calculation. Please try again.');
+      setCaptchaQ({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });
+      setCaptchaA('');
       return;
     }
     setLoading(true);
@@ -159,6 +167,21 @@ export default function Signup() {
                       placeholder="••••••••"
                     />
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-sans font-medium text-gray-300 mb-2 tracking-wide">
+                      Solve this: {captchaQ.a} + {captchaQ.b} = ?
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      className="appearance-none block w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all sm:text-sm font-mono"
+                      value={captchaA}
+                      onChange={(e) => setCaptchaA(e.target.value)}
+                      placeholder="Enter answer"
+                    />
+                  </div>
+
                   <div className="flex items-start mt-4">
                     <div className="flex items-center h-5">
                       <input

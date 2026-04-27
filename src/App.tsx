@@ -16,6 +16,7 @@ import Sales from './pages/Sales';
 import Reports from './pages/Reports';
 import Records from './pages/Records';
 import Customers from './pages/Customers';
+import CashFlow from './pages/CashFlow';
 import Settings from './pages/Settings';
 import AdminPanel from './pages/AdminPanel';
 import FeaturePage from './pages/FeaturePage';
@@ -142,6 +143,7 @@ export default function App() {
             <Route path="inventory" element={<Inventory />} />
             <Route path="pos" element={<POS />} />
             <Route path="sales" element={<Sales />} />
+            <Route path="cashflow" element={<CashFlow />} />
             <Route path="customers" element={<Customers />} />
             <Route path="reports" element={<Reports />} />
             <Route path="records" element={<Records />} />

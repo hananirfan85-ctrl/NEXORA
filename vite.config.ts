@@ -12,32 +12,28 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['pwa-192x192.svg', 'pwa-512x512.svg'],
+        includeAssets: ['logo.png'],
         manifest: {
-          name: 'NEXORA',
-          short_name: 'NEXA POs',
-          description: 'NEXA POS - A complete POS and ERP System',
+          name: 'NEXA POS',
+          short_name: 'NEXA',
+          description: 'NEXORA - A complete POS and Shop Management System',
           theme_color: '#4f46e5',
           background_color: '#ffffff',
           display: 'standalone',
           icons: [
-  {
-    src: '/logo.png',
-    sizes: '192x192',
-    type: 'image/png'
-  },
-  {
-    src: '/logo.png',
-    sizes: '512x512',
-    type: 'image/png'
-  },
-  {
-    src: '/logo.png',
-    sizes: '512x512',
-    type: 'image/png',
-    purpose: 'any maskable'
-  }
-]
+            {
+              src: 'logo.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any maskable'
+            },
+            {
+              src: 'logo.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable'
+            }
+          ]
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],

@@ -11,6 +11,7 @@ const navItems = [
   { name: 'Inventory', path: '/inventory', icon: Package },
   { name: 'POS Billing', path: '/pos', icon: ShoppingCart },
   { name: 'Sales', path: '/sales', icon: DollarSign },
+  { name: 'Cash Flow', path: '/cashflow', icon: DollarSign },
   { name: 'Customers', path: '/customers', icon: Users },
   { name: 'Reports', path: '/reports', icon: BarChart3 },
   { name: 'Records', path: '/records', icon: Clock },

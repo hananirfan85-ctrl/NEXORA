@@ -155,10 +155,22 @@ CREATE TABLE IF NOT EXISTS public.customers (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- 5.5 Cash Flows
+CREATE TABLE IF NOT EXISTS public.cash_flows (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  date DATE NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('income', 'expense')),
+  amount NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Enable RLS for new tables
 ALTER TABLE public.user_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cash_flows ENABLE ROW LEVEL SECURITY;
 
 -- 6. Super Admin & Basic RLS for new tables
 DO $$ BEGIN
@@ -168,6 +180,8 @@ DO $$ BEGIN
   DROP POLICY IF EXISTS "Superadmin manages all roles" ON public.user_roles;
   DROP POLICY IF EXISTS "Users can manage own customers" ON public.customers;
   DROP POLICY IF EXISTS "Superadmin manages all customers" ON public.customers;
+  DROP POLICY IF EXISTS "Users can manage own cash_flows" ON public.cash_flows;
+  DROP POLICY IF EXISTS "Superadmin manages all cash_flows" ON public.cash_flows;
   
   -- Also add Superadmin override to existing tables
   DROP POLICY IF EXISTS "Superadmin manages all products" ON public.products;
@@ -188,6 +202,10 @@ CREATE POLICY "Superadmin manages all roles" ON public.user_roles FOR ALL USING 
 -- Customer policies
 CREATE POLICY "Users can manage own customers" ON public.customers FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Superadmin manages all customers" ON public.customers FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
+
+-- Cash Flow policies
+CREATE POLICY "Users can manage own cash_flows" ON public.cash_flows FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Superadmin manages all cash_flows" ON public.cash_flows FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
 
 -- Admin overrides for existing tables
 CREATE POLICY "Superadmin manages all products" ON public.products FOR ALL USING (auth.jwt() ->> 'email' = 'hananirfan85@gmail.com');
