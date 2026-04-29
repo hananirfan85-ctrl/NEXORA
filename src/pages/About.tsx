@@ -59,7 +59,7 @@ export default function About() {
                 <div className="flex justify-center mt-auto">
                   <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-indigo-500/20 shadow-[0_0_30px_-10px_rgba(99,102,241,0.5)]">
   <img
-    src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/..."
+    src="https://pbs.twimg.com/profile_images/2022622427378020352/xOqGLbdb_400x400.jpg"
     alt="Hanan Irfan"
     className="w-full h-full object-cover"
   />
