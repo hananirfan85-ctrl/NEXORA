@@ -21,6 +21,19 @@ export default function Signup() {
       setError('You must accept the terms and conditions to register.');
       return;
     }
+
+    // Strict Input Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Security Error: Invalid email format detected.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Security Error: Password does not meet minimum length requirements.');
+      return;
+    }
+
     if (parseInt(captchaA) !== captchaQ.a + captchaQ.b) {
       setError('Incorrect CAPTCHA calculation. Please try again.');
       setCaptchaQ({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });

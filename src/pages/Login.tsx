@@ -12,6 +12,8 @@ export default function Login() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [captchaQ, setCaptchaQ] = useState({ a: 0, b: 0 });
   const [captchaA, setCaptchaA] = useState('');
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lockedOutUntil, setLockedOutUntil] = useState<number | null>(null);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -20,8 +22,28 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side Rate Limiting Check
+    if (lockedOutUntil && Date.now() < lockedOutUntil) {
+      const secondsLeft = Math.ceil((lockedOutUntil - Date.now()) / 1000);
+      setError(`Too many login attempts. Please try again in ${secondsLeft} seconds.`);
+      return;
+    }
+
     if (!termsAccepted) {
       setError('You must accept the terms and conditions to login.');
+      return;
+    }
+    
+    // Strict Input Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Security Error: Invalid email format detected.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Security Error: Password does not meet minimum length requirements.');
       return;
     }
     if (parseInt(captchaA) !== captchaQ.a + captchaQ.b) {
@@ -63,6 +85,12 @@ export default function Login() {
 
       if (error) {
         setError(error.message);
+        const newAttempts = loginAttempts + 1;
+        setLoginAttempts(newAttempts);
+        if (newAttempts >= 5) {
+          setLockedOutUntil(Date.now() + 60000); // 1 minute lockout
+          setError('Rate limit exceeded. System locked for 60 seconds.');
+        }
       } else {
         navigate('/');
       }

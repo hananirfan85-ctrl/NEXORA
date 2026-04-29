@@ -1,0 +1,140 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><title>NEXA POS Software Documentation</title>
+<style>
+body { font-family: 'Arial', sans-serif; line-height: 1.6; }
+h1 { color: #2c3e50; border-bottom: 2px solid #34495e; padding-bottom: 5px; }
+h2 { color: #34495e; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+table, th, td { border: 1px solid #bdc3c7; }
+th, td { padding: 10px; text-align: left; }
+th { background-color: #ecf0f1; }
+.code { font-family: monospace; background: #f4f4f4; padding: 10px; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h1>Software Documentation</h1>
+
+<h2>1. Project Information</h2>
+<p><b>Project Name:</b> NEXA POS</p>
+<p><b>Version:</b> v1.0.0</p>
+<p><b>Author / Company:</b> Hanan Irfan / NEXA Systems</p>
+<p><b>Release Date:</b> 2024-05-29</p>
+<p><b>Project Description:</b> NEXA POS is an advanced Point of Sale system built as a Progressive Web App (PWA). It is designed to automate and simplify business operations through a centralized shop management system with capabilities ranging from billing, inventory control, and customer management to robust reporting.</p>
+
+<hr>
+
+<h2>2. Purpose of the Software</h2>
+<ul>
+<li><b>Reduce Manual Work:</b> Automate inventory tracking, billing generation, and transaction logging.</li>
+<li><b>Improve Workflow Efficiency:</b> Synchronize sales and inventory in real-time, providing staff with instant stock availability.</li>
+<li><b>Provide Centralized Data Management:</b> Keep all user, vendor, product, and financial data in a single accessible cloud-based database.</li>
+<li><b>Target Users:</b> Retail shop owners, cashiers, store managers, and small-to-medium enterprise administrators.</li>
+</ul>
+
+<hr>
+
+<h2>3. Key Features</h2>
+<table>
+  <tr>
+    <th>Module</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><b>Authentication</b></td>
+    <td>Secure login and registration using Supabase Auth. Includes password hashing and bot integration.</td>
+  </tr>
+  <tr>
+    <td><b>Dashboard</b></td>
+    <td>Real-time analytics, revenue reports, and low-stock indicators.</td>
+  </tr>
+  <tr>
+    <td><b>User Management</b></td>
+    <td>Add, edit, and remove users conditionally (RBAC implementation).</td>
+  </tr>
+  <tr>
+    <td><b>POS Billing</b></td>
+    <td>Rapid checkout system with barcode scanning, custom discounts, and receipt generation.</td>
+  </tr>
+  <tr>
+    <td><b>Inventory</b></td>
+    <td>Full stock lifecycle tracking, item variations, classification, and SKU management.</td>
+  </tr>
+  <tr>
+    <td><b>Reporting</b></td>
+    <td>Export sales, daily summaries, and profit analytics.</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>4. Technology Stack</h2>
+<h3>Frontend (Client-side PWA)</h3>
+<ul>
+<li>React.js (v18+)</li>
+<li>Vite</li>
+<li>Tailwind CSS</li>
+</ul>
+
+<h3>Backend & Database</h3>
+<ul>
+<li>Supabase (PostgreSQL)</li>
+<li>Supabase GoTrue Auth (Authentication)</li>
+</ul>
+
+<h3>Deployment</h3>
+<ul>
+<li>Vercel (Edge Network)</li>
+</ul>
+
+<hr>
+
+<h2>5. System Requirements</h2>
+<h3>Minimum Hardware Requirements</h3>
+<ul>
+<li><b>RAM:</b> 4GB+</li>
+<li><b>Storage:</b> 100MB+ (Client app cache)</li>
+<li><b>Processor:</b> Dual Core+</li>
+</ul>
+
+<h3>Supported Platforms</h3>
+<ul>
+<li>Windows / macOS / Linux (PWA Desktop execution)</li>
+<li>iOS / Android (Mobile browser installation)</li>
+</ul>
+
+<hr>
+
+<h2>6. Installation Guide</h2>
+<p><b>Step 1: Clone Repository</b></p>
+<div class="code">git clone https://github.com/your-project/nexa-pos.git</div>
+<p><b>Step 2: Install Dependencies</b></p>
+<div class="code">npm install</div>
+<p><b>Step 3: Configure Environment Variables</b></p>
+<div class="code">VITE_SUPABASE_URL=https://your-project.supabase.co<br>VITE_SUPABASE_ANON_KEY=your-anon-key</div>
+<p><b>Step 4: Start Application</b></p>
+<div class="code">npm run dev</div>
+
+<hr>
+
+<h2>7. Security Implementation</h2>
+<p>This software prioritizes data integrity and system security. The following foundational security features are implemented:</p>
+<ul>
+<li><b>HTTPS Encryption:</b> Forced by default on deployment (Vercel edge limits the application strictly to SSL/TLS requests).</li>
+<li><b>Password Hashing:</b> Offloaded to Supabase GoTrue Auth engine, leveraging robust bcrypt hashing. Passwords never touch application memory as plain text except during encrypted transport.</li>
+<li><b>Role-Based Access Control (RBAC):</b> Interface layers and database policies selectively display information or deny backend POST/DELETE requests depending on user profiles.</li>
+<li><b>Input Validation:</b> All client-side registration and login endpoints enforce format structures (Email regex validations, minimum length algorithms, and math CAPTCHAs).</li>
+<li><b>Rate Limiting:</b> Managed intrinsically by the Supabase Edge infrastructure, preventing DDoS attacks against login pathways or database endpoints.</li>
+<li><b>Cross-Site Scripting (XSS):</b> React handles DOM sanitization intrinsically, preventing injection attacks.</li>
+</ul>
+
+<hr>
+
+<h2>8. Support and Contact</h2>
+<ul>
+<li><b>Email:</b> hananirfan85@gmail.com</li>
+<li><b>Platform:</b> NEXA POS Edge Platform</li>
+</ul>
+
+</body>
+</html>

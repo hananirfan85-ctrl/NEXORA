@@ -16,7 +16,7 @@ export default defineConfig(({mode}) => {
         manifest: {
           name: 'NEXA POS',
           short_name: 'NEXA',
-          description: 'NEXA POS - A complete POS and Shop Retail Management System',
+          description: 'NEXORA - A complete POS and Shop Management System',
           theme_color: '#4f46e5',
           background_color: '#ffffff',
           display: 'standalone',
