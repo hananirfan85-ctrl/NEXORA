@@ -1,6 +1,79 @@
 {
   "name": "NEXA POS",
-  "description": "NEXA POS- A modern Shop Management System with Inventory, POS Billing, Sales, Profit Tracking, and Reports.",
+  "short_name": "NEXA",
+  "version": "1.0.0",
+  "description": "NEXA POS is a modern Shop Management and Point of Sale (POS) system designed for retail stores, supermarkets, and businesses. Manage inventory, billing, sales, profit tracking, customer records, and business reports efficiently with a secure and user-friendly interface.",
+  "author": "Hanan Irfan",
+  "company": "NEXA Technologies",
+  "website": "https://nexapossystem.vercel.app",
+  "applicationCategory": "BusinessApplication",
+  "industry": "Retail Management",
+  "keywords": [
+    "POS System",
+    "Shop Management Software",
+    "Inventory Management",
+    "Billing Software",
+    "Retail POS",
+    "Sales Tracking",
+    "Profit Analytics",
+    "Business Reports",
+    "Store Management",
+    "Point of Sale",
+    "Invoice Management",
+    "Stock Management",
+    "Retail Software",
+    "Cashier System",
+    "Business Dashboard"
+  ],
+  "features": [
+    "POS Billing",
+    "Inventory Management",
+    "Sales Tracking",
+    "Profit Analytics",
+    "Invoice Generation",
+    "Customer Management",
+    "Role-Based Access Control",
+    "Business Reports",
+    "Secure Authentication",
+    "Real-Time Dashboard"
+  ],
+  "technologies": {
+    "frontend": "React.js",
+    "backend": "SupaBase",
+    "database": "PostrgeSQL",
+    "authentication": "SupaBase GoTrue Auth",
+    "deployment": "Vercel"
+  },
+  "security": {
+    "httpsEnabled": true,
+    "sslCertificate": true,
+    "passwordHashing": "bcrypt",
+    "jwtAuthentication": true,
+    "roleBasedAccess": true,
+    "secureHeaders": true
+  },
+  "seo": {
+    "title": "NEXA POS - Modern Shop Management & POS Billing Software",
+    "metaDescription": "NEXA POS is a complete POS and inventory management software for retail businesses. Manage billing, inventory, sales, reports, and customers with a secure cloud-based solution.",
+    "robots": "index, follow",
+    "canonical": "https://nexapossystem.vercel.app"
+  },
+  "support": {
+    "email": "hananirfan85@gmail.com",
+    "website": "https://nexapossystem.vercel.app"
+  },
+  "license": "Proprietary",
+  "secure": true,
+  "httpsEnabled": true,
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "Retail POS Billing",
+    "Inventory Control",
+    "Sales Reports",
+    "Profit Tracking",
+    "Invoice Printing",
+    "Customer Records",
+    "User Management",
+    "Secure Authentication"
+  ]
 }
