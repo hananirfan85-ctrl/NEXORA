@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { supabase } from './lib/supabase';
 import { AppLayout } from './components/layout/AppLayout';
@@ -29,9 +29,29 @@ import ContactAdmin from './pages/ContactAdmin';
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, signOut } = useAuth();
   const [roleStatus, setRoleStatus] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   
   useEffect(() => {
-    if (user) {
+    const handleOnline = () => {
+      setIsOffline(false);
+      toast.success('Back online!');
+    };
+    const handleOffline = () => {
+      setIsOffline(true);
+      toast.error('You are offline. Disconnected from dashboard.');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (user && !isOffline) {
       if (user.email?.toLowerCase() === 'hananirfan85@gmail.com') {
          setRoleStatus('admin');
          return;
@@ -77,7 +97,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
         supabase.removeChannel(subscription);
       };
     }
-  }, [user]);
+  }, [user, isOffline]);
+
+  if (isOffline) {
+    return <Navigate to="/home" />;
+  }
 
   if (loading || (user && !roleStatus)) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
